@@ -15,10 +15,7 @@ BOARD
 PARTS                              
 
   o C 100nF, X7R (0805)                                                         DK:399-1170-1-ND
-  - C1 C2                               Decoupling       
-
-  o C 1uF, 16V, X7R (0805)                                                      DK:490-1691-1-ND
-  - C3 C4                               Decoupling.
+  - C1 C2 C33                           Decoupling       
 
   o DS LCD 3 digits (LCD-S301C31TR)                                             DK:67-1788-ND
   - DS1                                 Main display
@@ -34,7 +31,7 @@ PARTS
 
   o R 1K 1%, 0.125W (0805)                                       	            DK:RMCF0805FT1K00CT-ND
   - R2                                  Current sense monitor scaler.
-  - R3 R4                               Voltage divider.
+  - R3 R4 R5 R6                         Voltage divider.
 
   o S Tactile SPST-NO 6x3.5mm                                                   DK:679-2452-ND
   - S1                                  Mode select.
@@ -45,23 +42,18 @@ PARTS
   o U ZXCT1009, (SOT23)                                                         DK:ZXCT1009FCT-ND
   - U2                                  High-side current sense monitor.
 
-  o VR MCP1700                                                                  DK:BSS84DW-FDICT-ND
-  - VR1                                 3V3 regulator.
-
 
 RECOMMENDED SOLDERING ORDER
 
   o Bottom
     - U1
     - U2
-    - VR1
     - C1 C2 C3
-    - C4 C5
     - R1
-    - R2 R3 R4
+    - R2 R3 R4 R5 R6
 
   o Top
     - P1
     - S1
     - DS1
-    - P1
+    - J1
