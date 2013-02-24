@@ -1,15 +1,15 @@
-= UsbConsume =
+= UsbAmps =
 
 
 RATINGS
 
-  o Input voltage ........: 5 V
-  o Input current ........: 500 mA
+  o Voltage ..: 5 V
+  o Current ..: 2 A
 
 
 BOARD
 
-  o Board size ...........: 59.00 x 23.00 mm (2.10 sqin)
+  o Board size: 59.00 x 23.00 mm (2.10 sqin)
 
 
 PARTS                              
