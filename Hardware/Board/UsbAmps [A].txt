@@ -33,9 +33,6 @@ PARTS
   - R2                                  Current sense monitor scaler.
   - R3 R4 R5 R6                         Voltage divider.
 
-  o S Tactile SPST-NO 6x3.5mm                                                   DK:679-2452-ND
-  - S1                                  Mode select.
-
   o U PIC16F1934-I/PT (TQFP-44)                                                 DK:PIC16F1934-I/PT-ND
   - U1
 
@@ -47,13 +44,12 @@ RECOMMENDED SOLDERING ORDER
 
   o Bottom
     - U1
-    - U2
-    - C1 C2 C3
     - R1
+    - U2
     - R2 R3 R4 R5 R6
+    - C1 C2 C3
 
   o Top
     - P1
-    - S1
     - DS1
     - J1
