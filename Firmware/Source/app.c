@@ -9,7 +9,7 @@
 void measure();
 void showMeasurement(unsigned char unitIndex, unsigned char typeIndex);
 void processMeasurement(double value, double *avg, double *min, double *max);
-
+void resetMeasurements();
 
 void main() {
     init();
@@ -25,19 +25,30 @@ void main() {
             clrwdt();
             measure(unitIndex, typeIndex);
 
+            unsigned char buttons = 0x00;
+
             touch_b1_start();
             __delay_ms(1);
-            if (touch_bx_stop() < 255) { //current/vout/powerout
-                unitIndex = (unitIndex + 1) % 3;
-                lcd_writeUnitAndType(unitIndex, typeIndex);
-                clrwdt();
-                __delay_ms(500);
-            }
+            if (touch_bx_stop() < 255) { buttons |= 0x01; }
 
             touch_b2_start();
             __delay_ms(1);
-            if (touch_bx_stop() < 255) { //avg/max/min
-                typeIndex = (typeIndex + 1) % 3;
+            if (touch_bx_stop() < 255) { buttons |= 0x02; }
+
+            if (buttons > 0x00) {
+                switch (buttons) {
+                    case 0x01: //current/vout/powerout
+                        unitIndex = (unitIndex + 1) % 3;
+                        break;
+                    case 0x02: //avg/max/min
+                        typeIndex = (typeIndex + 1) % 3;
+                        break;
+                    case 0x03: //reset min/max
+                        unitIndex = 0;
+                        typeIndex = 0;
+                        resetMeasurements();
+                        break;
+                }
                 lcd_writeUnitAndType(unitIndex, typeIndex);
                 clrwdt();
                 __delay_ms(500);
@@ -55,7 +66,7 @@ const double SMOOTHING_FACTOR = 0.23;
 
 void processMeasurement(double value, double *avg, double *min, double *max) {
     if (*avg < 0) { *avg = value; } else { *avg = *avg + (value - *avg) * SMOOTHING_FACTOR; }
-    if (*min < 0) { *min = value; } else if (value < *min) { *min = value; }
+    if (*min < 0) { *min = value; } else if ((value > 0) && (value < *min)) { *min = value; }
     if (*max < 0) { *max = value; } else if (value > *max) { *max = value; }
 }
 
@@ -63,6 +74,15 @@ void processMeasurement(double value, double *avg, double *min, double *max) {
 double AvgCurrent = -1, MinCurrent = -1, MaxCurrent = -1;
 double AvgVoltage = -1, MinVoltage = -1, MaxVoltage = -1;
 double AvgPower   = -1, MinPower   = -1, MaxPower   = -1;
+
+void resetMeasurements() {
+    MinCurrent = -1;
+    MaxCurrent = -1;
+    MinVoltage = -1;
+    MaxVoltage = -1;
+    MinPower   = -1;
+    MaxPower   = -1;
+}
 
 void measure() {
     double current = measure_getCurrent();
