@@ -15,7 +15,7 @@ BOARD
 PARTS                              
 
   o C 100nF, X7R (0805)                                                         DK:399-1170-1-ND
-  - C1 C2 C33                           Decoupling       
+  - C1 C2 C3                            Decoupling       
 
   o DS LCD 3 digits (LCD-S301C31TR)                                             DK:67-1788-ND
   - DS1                                 Main display
