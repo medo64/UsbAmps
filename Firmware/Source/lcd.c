@@ -78,9 +78,9 @@ void lcd_init() {
     CS0 = 0;
     SLPEN = 0; //LCD driver module is enabled in Sleep mode
 
-    LCDDATA0 = 0x55; //set initial data
-    LCDDATA1 = 0x55;
-    LCDDATA2 = 0x55;
+    LCDDATA0 = 0x00; //set initial data
+    LCDDATA1 = 0x00;
+    LCDDATA2 = 0x00;
 
     LCDIF = 0;
 
