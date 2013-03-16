@@ -3,15 +3,15 @@
 #include "config.h"
 
 
-const unsigned long VREF = 4096;
+const unsigned long VREF = 2048;
 const unsigned long ADC_MAX = 1023;
-const unsigned long RATIO_VOLTAGE = 200; //2:1 ratio (1K:1K)
+const unsigned long RATIO_VOLTAGE = 320; //2:1 ratio (1K:1K)
 const unsigned long RATIO_CURRENT = 100; //1V is 1A (3V max)
 
 
 void measure_init() {
-    ADFVR1 = 1; //A/D Converter Fixed Voltage Reference Peripheral output is 4x (4.096V)
-    ADFVR0 = 1;
+    ADFVR1 = 1; //A/D Converter Fixed Voltage Reference Peripheral output is 2x (2.048V)
+    ADFVR0 = 0;
     FVREN = 1; //Fixed Voltage Reference is enabled
 
     TRISB = TRISB | 0b00001110; //RB1, RB2, and RB3 are inputs

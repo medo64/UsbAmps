@@ -31,7 +31,10 @@ PARTS
 
   o R 1K 1%, 0.125W (0805)                                       	            DK:RMCF0805FT1K00CT-ND
   - R2                                  Current sense monitor scaler.
-  - R3 R4 R5 R6                         Voltage divider.
+  - R3 R4                               Voltage divider.
+
+  o R 2.2K 1%, 0.125W (0805)                                       	            DK:RMCF0805FT2K20CT-ND
+  - R5 R6                               Voltage divider.
 
   o U PIC16F1934-I/PT (TQFP-44)                                                 DK:PIC16F1934-I/PT-ND
   - U1
@@ -46,7 +49,8 @@ RECOMMENDED SOLDERING ORDER
     - U1
     - R1
     - U2
-    - R2 R3 R4 R5 R6
+    - R2 R3 R4
+    - R5 R6
     - C1 C2 C3
 
   o Top
