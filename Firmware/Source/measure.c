@@ -3,7 +3,7 @@
 
 
 const double VREF = 4.096;
-const double ADC_N = 1024.0;
+const double ADC_MAX = 1023.0;
 const double RATIO_VOLTAGE = 2.0; //2:1 ratio (1K:1K)
 const double RATIO_CURRENT = 1.0; //1V is 1A (3V max)
 
@@ -44,13 +44,13 @@ double round(double value) {
 }
 
 double measure_getVoltageIn() {
-    return round(getRawAdc(9) * VREF / ADC_N * RATIO_VOLTAGE);
+    return round(getRawAdc(9) * VREF / ADC_MAX * RATIO_VOLTAGE);
 }
 
 double measure_getVoltageOut() {
-    return round(getRawAdc(8) * VREF / ADC_N * RATIO_VOLTAGE);
+    return round(getRawAdc(8) * VREF / ADC_MAX * RATIO_VOLTAGE);
 }
 
 double measure_getCurrent() {
-    return round(getRawAdc(10) * VREF / ADC_N * RATIO_CURRENT);
+    return round(getRawAdc(10) * VREF / ADC_MAX * RATIO_CURRENT);
 }
