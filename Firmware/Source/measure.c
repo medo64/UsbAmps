@@ -1,4 +1,5 @@
 #include <pic.h>
+#include <limits.h>
 #include "config.h"
 
 
@@ -40,13 +41,34 @@ unsigned int getRawAdc(unsigned char channel) {
 }
 
 unsigned long measure_getVoltageIn_10u() {
-    return getRawAdc(9) * VREF * RATIO_VOLTAGE / ADC_MAX;
+    unsigned int adc = getRawAdc(9);
+    if (adc < ADC_MAX) {
+        unsigned long value = adc * VREF * RATIO_VOLTAGE / ADC_MAX;
+        if (value >= 100) { value -= 100; }
+        return value;
+    } else {
+        return LONG_MAX;
+    }
 }
 
 unsigned long measure_getVoltageOut_10u() {
-    return getRawAdc(8) * VREF * RATIO_VOLTAGE / ADC_MAX;
+    unsigned int adc = getRawAdc(8);
+    if (adc < ADC_MAX) {
+        unsigned long value = adc * VREF * RATIO_VOLTAGE / ADC_MAX;
+        if (value >= 100) { value -= 100; }
+        return value;
+    } else {
+        return LONG_MAX;
+    }
 }
 
 unsigned long measure_getCurrent_10u() {
-    return getRawAdc(10) * VREF * RATIO_CURRENT / ADC_MAX;
+    unsigned int adc = getRawAdc(10);
+    if (adc < ADC_MAX) {
+        unsigned long value = adc * VREF * RATIO_CURRENT / ADC_MAX;
+        if (value >= 100) { value -= 100; }
+        return value;
+    } else {
+        return LONG_MAX;
+    }
 }

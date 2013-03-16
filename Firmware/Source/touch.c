@@ -1,4 +1,5 @@
 #include <pic.h>
+#include "config.h"
 
 
 void touch_init() {
@@ -42,4 +43,16 @@ unsigned char touch_bx_stop() {
     } else {
         return TMR0;
     }
+}
+
+bit touch_b1_pressed() {
+    touch_b1_start();
+    __delay_ms(1);
+    return (touch_bx_stop() < 255) ? 1 : 0;
+}
+
+bit touch_b2_pressed() {
+    touch_b2_start();
+    __delay_ms(1);
+    return (touch_bx_stop() < 255) ? 1 : 0;
 }

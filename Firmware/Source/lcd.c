@@ -150,6 +150,12 @@ void writeOverload() {
     LCDDATA2 = OVERLOAD_SEGMENTS[2];
 }
 
+void lcd_clear() {
+    LCDDATA0 = 0;
+    LCDDATA1 = 0;
+    LCDDATA2 = 0;
+}
+
 void lcd_writeNumber(unsigned long value_10u) {
     if (value_10u >= 1000000) {
         writeOverload();

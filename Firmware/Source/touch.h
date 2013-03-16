@@ -3,8 +3,7 @@
 
 void touch_init();
 
-void touch_b1_start();
-void touch_b2_start();
-unsigned char touch_bx_stop();
+bit touch_b1_pressed();
+bit touch_b2_pressed();
 
 #endif
