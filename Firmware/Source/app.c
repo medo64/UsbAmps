@@ -1,5 +1,6 @@
 #include <pic16f1934.h>
 #include <pic.h>
+#include <limits.h>
 #include "config.h"
 #include "lcd.h"
 #include "measure.h"
@@ -8,7 +9,7 @@
 
 void measure();
 void showMeasurement(unsigned char unitIndex, unsigned char typeIndex);
-void processMeasurement(double value, double *avg, double *min, double *max);
+void processMeasurement(unsigned long value, unsigned long *avg, unsigned long *min, unsigned long *max);
 void resetMeasurements();
 
 void main() {
@@ -62,32 +63,30 @@ void main() {
 }
 
 
-const double SMOOTHING_FACTOR = 0.23;
-
-void processMeasurement(double value, double *avg, double *min, double *max) {
-    if (*avg < 0) { *avg = value; } else { *avg = *avg + (value - *avg) * SMOOTHING_FACTOR; }
-    if (*min < 0) { *min = value; } else if ((value > 0) && (value < *min)) { *min = value; }
-    if (*max < 0) { *max = value; } else if (value > *max) { *max = value; }
+void processMeasurement(unsigned long value, unsigned long *avg, unsigned long *min, unsigned long *max) {
+    *avg = value;
+    if (*min == LONG_MAX) { *min = value; } else if ((value > 0) && (value < *min)) { *min = value; }
+    if (*max == LONG_MAX) { *max = value; } else if (value > *max) { *max = value; }
 }
 
 
-double AvgCurrent = -1, MinCurrent = -1, MaxCurrent = -1;
-double AvgVoltage = -1, MinVoltage = -1, MaxVoltage = -1;
-double AvgPower   = -1, MinPower   = -1, MaxPower   = -1;
+unsigned long AvgCurrent = LONG_MAX, MinCurrent = LONG_MAX, MaxCurrent = LONG_MAX;
+unsigned long AvgVoltage = LONG_MAX, MinVoltage = LONG_MAX, MaxVoltage = LONG_MAX;
+unsigned long AvgPower   = LONG_MAX, MinPower   = LONG_MAX, MaxPower   = LONG_MAX;
 
 void resetMeasurements() {
-    MinCurrent = -1;
-    MaxCurrent = -1;
-    MinVoltage = -1;
-    MaxVoltage = -1;
-    MinPower   = -1;
-    MaxPower   = -1;
+    MinCurrent = LONG_MAX;
+    MaxCurrent = LONG_MAX;
+    MinVoltage = LONG_MAX;
+    MaxVoltage = LONG_MAX;
+    MinPower   = LONG_MAX;
+    MaxPower   = LONG_MAX;
 }
 
 void measure() {
-    double current = measure_getCurrent();
-    double voltage = measure_getVoltageOut();
-    double power   = current * voltage;
+    unsigned long current = measure_getCurrent_10u();
+    unsigned long voltage = measure_getVoltageOut_10u();
+    unsigned long power   = current * voltage;
     processMeasurement(current, &AvgCurrent, &MinCurrent, &MaxCurrent);
     processMeasurement(voltage, &AvgVoltage, &MinVoltage, &MaxVoltage);
     processMeasurement(power,   &AvgPower,   &MinPower,   &MaxPower);

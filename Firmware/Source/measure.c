@@ -2,10 +2,10 @@
 #include "config.h"
 
 
-const double VREF = 4.096;
-const double ADC_MAX = 1023.0;
-const double RATIO_VOLTAGE = 2.0; //2:1 ratio (1K:1K)
-const double RATIO_CURRENT = 1.0; //1V is 1A (3V max)
+const unsigned long VREF = 4096;
+const unsigned long ADC_MAX = 1023;
+const unsigned long RATIO_VOLTAGE = 200; //2:1 ratio (1K:1K)
+const unsigned long RATIO_CURRENT = 100; //1V is 1A (3V max)
 
 
 void measure_init() {
@@ -39,18 +39,14 @@ unsigned int getRawAdc(unsigned char channel) {
     return ADRES;
 }
 
-double round(double value) {
-    return (int)(value * 1000) / 1000.0;
+unsigned long measure_getVoltageIn_10u() {
+    return getRawAdc(9) * VREF * RATIO_VOLTAGE / ADC_MAX;
 }
 
-double measure_getVoltageIn() {
-    return round(getRawAdc(9) * VREF / ADC_MAX * RATIO_VOLTAGE);
+unsigned long measure_getVoltageOut_10u() {
+    return getRawAdc(8) * VREF * RATIO_VOLTAGE / ADC_MAX;
 }
 
-double measure_getVoltageOut() {
-    return round(getRawAdc(8) * VREF / ADC_MAX * RATIO_VOLTAGE);
-}
-
-double measure_getCurrent() {
-    return round(getRawAdc(10) * VREF / ADC_MAX * RATIO_CURRENT);
+unsigned long measure_getCurrent_10u() {
+    return getRawAdc(10) * VREF * RATIO_CURRENT / ADC_MAX;
 }

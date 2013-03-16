@@ -1,4 +1,5 @@
 #include <pic.h>
+#include <limits.h>
 
 
 //LCDDATA0:  C2  A1 DP1  E2  F1  G1   -  C3
@@ -149,27 +150,27 @@ void writeOverload() {
     LCDDATA2 = OVERLOAD_SEGMENTS[2];
 }
 
-void lcd_writeNumber(double value) {
-    if (value >= 10) {
+void lcd_writeNumber(unsigned long value_10u) {
+    if (value_10u >= 1000000) {
         writeOverload();
-    } else if (value >= 1) { //1 + 2 digits
-        unsigned char d1 = (unsigned char)value;
-        unsigned char d2 = (unsigned char)(value * 10) % 10;
-        unsigned char d3 = (unsigned char)(value * 100) % 10;
+    } else if (value_10u >= 100000) { //1000-9999 mX => 4.20
+        unsigned char d1 = (unsigned char)((value_10u / 100000) % 10);
+        unsigned char d2 = (unsigned char)((value_10u / 10000) % 10);
+        unsigned char d3 = (unsigned char)((value_10u / 1000) % 10);
         writeDigits(d1, d2, d3, 1);
-    } else if (value >= 0.1) { //0 + 3 digits
-        unsigned char d1 = (unsigned char)(value * 10);
-        unsigned char d2 = (unsigned char)(value * 100) % 10;
-        writeDigits(0xFF, d1, d2, 1);
-    } else if (value >= 0.01) { //0 + 2 digits
-        unsigned char d2 = (unsigned char)(value * 100) % 10;
-        unsigned char d3 = (unsigned char)(value * 1000) % 10;
-        writeDigits(0xFF, d2, d3, 0);
-    } else if (value >= 0.001) { //0 + 1 digit
-        unsigned char d3 = (unsigned char)(value * 1000) % 10;
-        writeDigits(0xFF, 0xFF, d3, 0);
+    } else if (value_10u >= 10000) { //100-999 mX => .42
+        unsigned char d1 = (unsigned char)((value_10u / 10000) % 10);
+        unsigned char d2 = (unsigned char)((value_10u / 1000) % 10);
+        writeDigits(UCHAR_MAX, d1, d2, 1);
+    } else if (value_10u >= 1000) { //10-99 mX => 42
+        unsigned char d2 = (unsigned char)(value_10u / 1000);
+        unsigned char d3 = (unsigned char)((value_10u / 100) % 10);
+        writeDigits(UCHAR_MAX, d2, d3, 0);
+    } else if (value_10u >= 100) { //1-9 mX => 4
+        unsigned char d3 = (unsigned char)(value_10u / 100);
+        writeDigits(UCHAR_MAX, UCHAR_MAX, d3, 0);
     } else {
-        writeDigits(0xFF, 0xFF2, 0, 0);
+        writeDigits(UCHAR_MAX, UCHAR_MAX, 0, 0);
     }
 }
 
