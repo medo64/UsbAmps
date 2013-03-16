@@ -10,6 +10,7 @@
 void measure();
 void resetMeasurements();
 void showMeasurement(unsigned char unitIndex, unsigned char typeIndex);
+unsigned char getButtonMask();
 
 
 void main() {
@@ -20,42 +21,53 @@ void main() {
 
     unsigned char unitIndex = 0; //0:current; 1:voltage; 2:power
     unsigned char typeIndex = 0; //0:avg; 1:max; 2:min
-    unsigned char delayDisplay = 0;
 
     while (1) {
-        clrwdt();
         measure();
-        if (delayDisplay > 0) { delayDisplay--; continue; }
 
-        unsigned char buttons = 0x00;
-        if (touch_b1_pressed()) { buttons |= 0x01; }
-        if (touch_b2_pressed()) { buttons |= 0x02; }
-        if (buttons > 0x00) {
-            switch (buttons) {
-                case 0x01: //current/vout/powerout
-                    unitIndex = (unitIndex + 1) % 3;
-                    break;
-                case 0x02: //avg/max/min
-                    typeIndex = (typeIndex + 1) % 3;
-                    break;
-                case 0x03: //reset min/max
-                    unitIndex = 0;
-                    typeIndex = 0;
-                    resetMeasurements();
-                    break;
+        unsigned char buttons = getButtonMask();
+        if (buttons != 0) {
+            unsigned char counter = 0;
+            unsigned char nextButtons = buttons;
+            while (nextButtons != 0) {
+                counter = (counter + 1) % 2;
+                measure();
+                nextButtons = getButtonMask();
+                buttons |= nextButtons;
+                switch (buttons) {
+                    case 0x01: lcd_writeUnitAndType((unitIndex + 1) % 3, typeIndex); break; //current/vout/powerout
+                    case 0x02: lcd_writeUnitAndType(unitIndex, (typeIndex + 1) % 3); break; //avg/max/min
+                    case 0x03: //reset min/max
+                        if (counter == 0) {
+                            lcd_clear();
+                        } else {
+                            lcd_writeUnitAndType(unitIndex, typeIndex);
+                        }
+                        break;
+                }
             }
-            lcd_writeUnitAndType(unitIndex, typeIndex);
-            delayDisplay = 1;
-        } else { //show
+            switch (buttons) {
+                case 0x01: unitIndex = (unitIndex + 1) % 3; break; //current/vout/powerout
+                case 0x02: typeIndex = (typeIndex + 1) % 3; break; //avg/max/min
+                case 0x03: resetMeasurements();             break; //reset min/max
+            }
+        } else {
             showMeasurement(unitIndex, typeIndex);
         }
     }
 }
 
+unsigned char getButtonMask() {
+    unsigned char mask = 0x00;
+    if (touch_b1_pressed()) { mask |= 0x01; }
+    if (touch_b2_pressed()) { mask |= 0x02; }
+    return mask;
+}
+
 
 void processMinMax(unsigned long value, unsigned long *min, unsigned long *max) {
     if (value == LONG_MAX) { return; }
-    if (*min == LONG_MAX) { *min = value; } else if ((value > 0) && (value < *min)) { *min = value; }
+    if (*min == LONG_MAX) { *min = value; } else if (value < *min) { *min = value; }
     if (*max == LONG_MAX) { *max = value; } else if (value > *max) { *max = value; }
 }
 
@@ -69,14 +81,16 @@ void processAvg(unsigned long sum, unsigned int count, unsigned long *avg) {
 }
 
 const unsigned char AVG_COUNT = 100;
+
 unsigned long AvgCurrent = LONG_MAX, MinCurrent = LONG_MAX, MaxCurrent = LONG_MAX;
 unsigned long AvgVoltage = LONG_MAX, MinVoltage = LONG_MAX, MaxVoltage = LONG_MAX;
 unsigned long AvgPower   = LONG_MAX, MinPower   = LONG_MAX, MaxPower   = LONG_MAX;
 
 void measure() {
+    clrwdt();
     unsigned long sumCurrent = 0, sumVoltage = 0, sumPower = 0;
     unsigned int  cntCurrent = 0, cntVoltage = 0, cntPower = 0;
-    for (unsigned char a=0; a<AVG_COUNT; a++) {
+    for (unsigned char i=0; i<AVG_COUNT; i++) {
         unsigned long current = measure_getCurrent_10u();
         unsigned long voltage = measure_getVoltageOut_10u();
         unsigned long power   = ((current == LONG_MAX) || (voltage == LONG_MAX)) ? LONG_MAX : (current/100) * (voltage/100) / 10;
