@@ -3,15 +3,17 @@
 #include "config.h"
 
 
-const unsigned long VREF = 4096;
-const unsigned long ADC_MAX = 1023;
+#define VREF       4096L
+#define ADC_COUNT  1024L
+#define ADC_MAX    1023L
 
-const unsigned long VOLTAGE_RATIO = 200; //2:1 ratio (1K:1K)
-const unsigned long VOLTAGE_ERROR_OFFSET = 4096L * 200 / 1024 / 2 + 1; //just a guess (Vref*ratio / ADCmax / 2)
+#define VOLTAGE_RATIO  200L //2:1 ratio (1K:1K)
+#define CURRENT_RATIO  100L //1V is 1A (3V max)
+
+const unsigned long VOLTAGE_ERROR_OFFSET = VREF * VOLTAGE_RATIO / ADC_COUNT / 2 + 1; //just a guess
 const unsigned long VOLTAGE_ERROR_FACTOR = 100000L / 200; //0.2%
 
-const unsigned long CURRENT_RATIO = 100; //1V is 1A (3V max)
-const unsigned long CURRENT_ERROR_OFFSET = 4096L * 100 / 1024 / 2 + 1; //just a guess (Vref*ratio / ADCmax / 2)
+const unsigned long CURRENT_ERROR_OFFSET = VREF * CURRENT_RATIO / ADC_COUNT / 2 + 1; //just a guess
 const unsigned long CURRENT_ERROR_FACTOR = 100000L / 200; //0.2%
 
 
