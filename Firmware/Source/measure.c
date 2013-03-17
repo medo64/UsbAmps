@@ -7,6 +7,8 @@ const unsigned long VREF = 2048;
 const unsigned long ADC_MAX = 1023;
 const unsigned long RATIO_VOLTAGE = 320; //2:1 ratio (1K:1K)
 const unsigned long RATIO_CURRENT = 100; //1V is 1A (3V max)
+const unsigned long OFFSET_ERROR_VOLTAGE = 326; //just an approximation
+const unsigned long OFFSET_ERROR_CURRENT = 102; //just an approximation
 
 
 void measure_init() {
@@ -33,7 +35,7 @@ void measure_init() {
 
 unsigned int getRawAdc(unsigned char channel) {
     ADCON0 = (channel << 2) | 0x01; //Analog Channel Select bits / leave ADON
-    __delay_us(10); //to discharge holding cap if there was measurement just before (at least 10us)
+    __delay_us(13); //to discharge holding cap if there was measurement just before (at least 10us)
     ADGO = 1; //Setting this bit starts an A/D conversion cycle.
     while(ADGO); //A/D conversion cycle in progress.
     ADON = 0; //ADC is disabled and consumes no operating current
@@ -44,8 +46,8 @@ unsigned long measure_getVoltageIn_10u() {
     unsigned int adc = getRawAdc(9);
     if (adc < ADC_MAX) {
         unsigned long value = adc * VREF * RATIO_VOLTAGE / ADC_MAX;
-        if (value >= 100) { value -= 100; }
-        return value;
+        if (value > OFFSET_ERROR_VOLTAGE) { value -= OFFSET_ERROR_VOLTAGE; } else { value = 0; }
+        return (value / 100) * 100;
     } else {
         return LONG_MAX;
     }
@@ -55,8 +57,8 @@ unsigned long measure_getVoltageOut_10u() {
     unsigned int adc = getRawAdc(8);
     if (adc < ADC_MAX) {
         unsigned long value = adc * VREF * RATIO_VOLTAGE / ADC_MAX;
-        if (value >= 100) { value -= 100; }
-        return value;
+        if (value > OFFSET_ERROR_VOLTAGE) { value -= OFFSET_ERROR_VOLTAGE; } else { value = 0; }
+        return (value / 100) * 100;
     } else {
         return LONG_MAX;
     }
@@ -66,8 +68,8 @@ unsigned long measure_getCurrent_10u() {
     unsigned int adc = getRawAdc(10);
     if (adc < ADC_MAX) {
         unsigned long value = adc * VREF * RATIO_CURRENT / ADC_MAX;
-        if (value >= 100) { value -= 100; }
-        return value;
+        if (value > OFFSET_ERROR_CURRENT) { value -= OFFSET_ERROR_CURRENT; } else { value = 0; }
+        return (value / 100) * 100;
     } else {
         return LONG_MAX;
     }

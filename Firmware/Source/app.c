@@ -76,7 +76,7 @@ void processAvg(unsigned long sum, unsigned int count, unsigned long *avg) {
         *avg = LONG_MAX;
     } else {
         unsigned long value = sum / count;
-        if (*avg == LONG_MAX) { *avg = value; } else { *avg = (*avg + value) / 2; }
+        *avg = value;
     }
 }
 
