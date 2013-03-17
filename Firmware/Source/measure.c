@@ -5,10 +5,14 @@
 
 const unsigned long VREF = 2048;
 const unsigned long ADC_MAX = 1023;
-const unsigned long RATIO_VOLTAGE = 320; //2:1 ratio (1K:1K)
-const unsigned long RATIO_CURRENT = 100; //1V is 1A (3V max)
-const unsigned long OFFSET_ERROR_VOLTAGE = 326; //just an approximation
-const unsigned long OFFSET_ERROR_CURRENT = 102; //just an approximation
+
+const unsigned long VOLTAGE_RATIO = 320; //2:1 ratio (1K:1K)
+const unsigned long VOLTAGE_ERROR_OFFSET = 2048L * 320 / 1024 / 2 + 1; //just a guess (Vref*ratio / ADCcount / 2)
+const unsigned long VOLTAGE_ERROR_FACTOR = 100000L / 200; //0.2%
+
+const unsigned long CURRENT_RATIO = 100; //1V is 1A (3V max)
+const unsigned long CURRENT_ERROR_OFFSET = 2048L * 100 / 1024 / 2 + 1; //just a guess (Vref*ratio / ADCcount / 2)
+const unsigned long CURRENT_ERROR_FACTOR = 100000L / 200; //0.2%
 
 
 void measure_init() {
@@ -42,34 +46,33 @@ unsigned int getRawAdc(unsigned char channel) {
     return ADRES;
 }
 
-unsigned long measure_getVoltageIn_10u() {
-    unsigned int adc = getRawAdc(9);
+unsigned long getVoltage_10u(unsigned char channel) {
+    unsigned int adc = getRawAdc(channel);
     if (adc < ADC_MAX) {
-        unsigned long value = adc * VREF * RATIO_VOLTAGE / ADC_MAX;
-        if (value > OFFSET_ERROR_VOLTAGE) { value -= OFFSET_ERROR_VOLTAGE; } else { value = 0; }
-        return (value / 100) * 100;
+        unsigned long value = adc * VREF * VOLTAGE_RATIO / ADC_MAX;
+        if (value > VOLTAGE_ERROR_OFFSET) { value -= VOLTAGE_ERROR_OFFSET; } else { value = 0; }
+        unsigned long errorValue = value / VOLTAGE_ERROR_FACTOR;
+        return ((value - errorValue) / 100) * 100;
     } else {
         return LONG_MAX;
     }
 }
 
+unsigned long measure_getVoltageIn_10u() {
+    return getVoltage_10u(9);
+}
+
 unsigned long measure_getVoltageOut_10u() {
-    unsigned int adc = getRawAdc(8);
-    if (adc < ADC_MAX) {
-        unsigned long value = adc * VREF * RATIO_VOLTAGE / ADC_MAX;
-        if (value > OFFSET_ERROR_VOLTAGE) { value -= OFFSET_ERROR_VOLTAGE; } else { value = 0; }
-        return (value / 100) * 100;
-    } else {
-        return LONG_MAX;
-    }
+    return getVoltage_10u(8);
 }
 
 unsigned long measure_getCurrent_10u() {
     unsigned int adc = getRawAdc(10);
     if (adc < ADC_MAX) {
-        unsigned long value = adc * VREF * RATIO_CURRENT / ADC_MAX;
-        if (value > OFFSET_ERROR_CURRENT) { value -= OFFSET_ERROR_CURRENT; } else { value = 0; }
-        return (value / 100) * 100;
+        unsigned long value = adc * VREF * CURRENT_RATIO / ADC_MAX;
+        if (value > CURRENT_ERROR_OFFSET) { value -= CURRENT_ERROR_OFFSET; } else { value = 0; }
+        unsigned long errorValue = value / CURRENT_ERROR_FACTOR;
+        return ((value - errorValue) / 100) * 100;
     } else {
         return LONG_MAX;
     }
