@@ -51,7 +51,7 @@ unsigned int getRawAdc(unsigned char channel) {
 unsigned long getVoltage_10u(unsigned char channel) {
     unsigned int adc = getRawAdc(channel);
     if (adc < ADC_MAX) {
-        if (adc <= VOLTAGE_ADC_OFFSET) { adc = 0; }
+        if (adc <= VOLTAGE_ADC_OFFSET) { adc = 0; } else { adc = adc; }
         unsigned long value = adc * VREF * VOLTAGE_RATIO / ADC_MAX;
         unsigned long errorValue = value * VOLTAGE_ERROR_SCALE / 100000;
         return ((value - errorValue) / 1000) * 1000;
@@ -71,7 +71,7 @@ unsigned long measure_getVoltageOut_10u() {
 unsigned long measure_getCurrent_10u() {
     unsigned int adc = getRawAdc(10);
     if (adc < ADC_MAX) {
-        if (adc <= CURRENT_ADC_OFFSET) { adc = 0; }
+        if (adc <= CURRENT_ADC_OFFSET) { adc = 0; } else { adc = adc; }
         unsigned long value = adc * VREF * CURRENT_RATIO / ADC_MAX;
         unsigned long errorValue = value * CURRENT_ERROR_SCALE / 100000;
         return ((value - errorValue) / 1000) * 1000;
