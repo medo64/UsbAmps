@@ -87,7 +87,7 @@ void processAvg(unsigned long sum, unsigned int count, unsigned long *avg) {
     }
 }
 
-const unsigned char AVG_COUNT = 100;
+const unsigned char AVG_COUNT = 50;
 
 unsigned long AvgCurrent = LONG_MAX, MinCurrent = LONG_MAX, MaxCurrent = LONG_MAX;
 unsigned long AvgVoltage = LONG_MAX, MinVoltage = LONG_MAX, MaxVoltage = LONG_MAX;
