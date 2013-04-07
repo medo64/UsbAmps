@@ -10,11 +10,11 @@
 #define VOLTAGE_RATIO  200L //2:1 ratio (1K:1K)
 #define CURRENT_RATIO  100L //1V is 1A (3V max)
 
-const unsigned long VOLTAGE_ERROR_OFFSET = VREF * VOLTAGE_RATIO / ADC_COUNT / 2 + 1; //just a guess
-const unsigned long VOLTAGE_ERROR_FACTOR = 100000L / 200; //0.2%
+const unsigned long VOLTAGE_ADC_OFFSET = 2; //just a guess
+const unsigned long CURRENT_ADC_OFFSET = 0; //just a guess
 
-const unsigned long CURRENT_ERROR_OFFSET = VREF * CURRENT_RATIO / ADC_COUNT / 2 + 1; //just a guess
-const unsigned long CURRENT_ERROR_FACTOR = 100000L / 200; //0.2%
+const unsigned long VOLTAGE_ERROR_SCALE =  500; //0.5%
+const unsigned long CURRENT_ERROR_SCALE = 1000; //1.0%
 
 
 void measure_init() {
@@ -51,10 +51,10 @@ unsigned int getRawAdc(unsigned char channel) {
 unsigned long getVoltage_10u(unsigned char channel) {
     unsigned int adc = getRawAdc(channel);
     if (adc < ADC_MAX) {
+        if (adc <= VOLTAGE_ADC_OFFSET) { adc = 0; } else { adc = adc; }
         unsigned long value = adc * VREF * VOLTAGE_RATIO / ADC_MAX;
-        if (value > VOLTAGE_ERROR_OFFSET) { value -= VOLTAGE_ERROR_OFFSET; } else { value = 0; }
-        unsigned long errorValue = value / VOLTAGE_ERROR_FACTOR;
-        return ((value - errorValue) / 100) * 100;
+        unsigned long errorValue = value * VOLTAGE_ERROR_SCALE / 100000;
+        return ((value - errorValue + 50) / 100) * 100;
     } else {
         return LONG_MAX;
     }
@@ -71,10 +71,10 @@ unsigned long measure_getVoltageOut_10u() {
 unsigned long measure_getCurrent_10u() {
     unsigned int adc = getRawAdc(10);
     if (adc < ADC_MAX) {
+        if (adc <= CURRENT_ADC_OFFSET) { adc = 0; } else { adc = adc; }
         unsigned long value = adc * VREF * CURRENT_RATIO / ADC_MAX;
-        if (value > CURRENT_ERROR_OFFSET) { value -= CURRENT_ERROR_OFFSET; } else { value = 0; }
-        unsigned long errorValue = value / CURRENT_ERROR_FACTOR;
-        return ((value - errorValue) / 100) * 100;
+        unsigned long errorValue = value * CURRENT_ERROR_SCALE / 100000;
+        return ((value - errorValue + 50) / 100) * 100;
     } else {
         return LONG_MAX;
     }
