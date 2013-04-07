@@ -159,15 +159,11 @@ void lcd_clear() {
 void lcd_writeNumber(unsigned long value_10u) {
     if (value_10u >= 1000000) {
         writeOverload();
-    } else if (value_10u >= 100000) { //1000-9999 mX => 4.20
+    } else if (value_10u >= 10000) { //100-9999 mX => 4.20
         unsigned char d1 = (unsigned char)((value_10u / 100000) % 10);
         unsigned char d2 = (unsigned char)((value_10u / 10000) % 10);
         unsigned char d3 = (unsigned char)((value_10u / 1000) % 10);
         writeDigits(d1, d2, d3, 1);
-    } else if (value_10u >= 10000) { //100-999 mX => .42
-        unsigned char d1 = (unsigned char)((value_10u / 10000) % 10);
-        unsigned char d2 = (unsigned char)((value_10u / 1000) % 10);
-        writeDigits(UCHAR_MAX, d1, d2, 1);
     } else if (value_10u >= 1000) { //10-99 mX => 42
         unsigned char d2 = (unsigned char)(value_10u / 1000);
         unsigned char d3 = (unsigned char)((value_10u / 100) % 10);
