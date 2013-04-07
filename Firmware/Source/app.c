@@ -8,7 +8,7 @@
 
 
 void measure();
-void resetMeasurements();
+void resetMinMax();
 void showMeasurement(unsigned char unitIndex, unsigned char typeIndex);
 unsigned char getButtonMask();
 
@@ -35,7 +35,7 @@ void main() {
                 nextButtons = getButtonMask();
                 buttons |= nextButtons;
                 switch (buttons) {
-                    case 0x01: lcd_writeUnitAndType((unitIndex + 1) % 3, typeIndex); break; //current/vout/powerout
+                    case 0x01: lcd_writeUnitAndType((unitIndex + 1) % 3, 0); break; //current/vout/powerout
                     case 0x02: lcd_writeUnitAndType(unitIndex, (typeIndex + 1) % 3); break; //avg/max/min
                     case 0x03: //reset min/max
                         if (counter == 0) {
@@ -47,9 +47,16 @@ void main() {
                 }
             }
             switch (buttons) {
-                case 0x01: unitIndex = (unitIndex + 1) % 3; break; //current/vout/powerout
-                case 0x02: typeIndex = (typeIndex + 1) % 3; break; //avg/max/min
-                case 0x03: resetMeasurements();             break; //reset min/max
+                case 0x01: //current/vout/powerout
+                    unitIndex = (unitIndex + 1) % 3;
+                    typeIndex = 0;
+                    break;
+                case 0x02: //avg/max/min
+                    typeIndex = (typeIndex + 1) % 3;
+                    break;
+                case 0x03: //reset min/max
+                    resetMinMax();
+                    break;
             }
         } else {
             showMeasurement(unitIndex, typeIndex);
@@ -106,7 +113,7 @@ void measure() {
     processAvg(sumPower  , cntPower,   &AvgPower);
 }
 
-void resetMeasurements() {
+void resetMinMax() {
     MinCurrent = LONG_MAX;
     MaxCurrent = LONG_MAX;
     MinVoltage = LONG_MAX;
