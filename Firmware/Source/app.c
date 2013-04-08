@@ -124,14 +124,14 @@ void resetMinMax() {
 
 void showMeasurement(unsigned char unitIndex, unsigned char typeIndex) {
     switch (unitIndex * 3 + typeIndex) {
-        case 0: lcd_writeNumber(AvgCurrent); break;
-        case 1: lcd_writeNumber(MaxCurrent); break;
-        case 2: lcd_writeNumber(MinCurrent); break;
-        case 3: lcd_writeNumber(AvgVoltage); break;
-        case 4: lcd_writeNumber(MaxVoltage); break;
-        case 5: lcd_writeNumber(MinVoltage); break;
-        case 6: lcd_writeNumber(AvgPower); break;
-        case 7: lcd_writeNumber(MaxPower); break;
-        case 8: lcd_writeNumber(MinPower); break;
+        case 0: lcd_writeMilliValue(AvgCurrent); break;
+        case 1: lcd_writeMilliValue(MaxCurrent); break;
+        case 2: lcd_writeMilliValue(MinCurrent); break;
+        case 3: lcd_writeValue(AvgVoltage); break;
+        case 4: lcd_writeValue(MaxVoltage); break;
+        case 5: lcd_writeValue(MinVoltage); break;
+        case 6: lcd_writeValue(AvgPower); break;
+        case 7: lcd_writeValue(MaxPower); break;
+        case 8: lcd_writeValue(MinPower); break;
     }
 }

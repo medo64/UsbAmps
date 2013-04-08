@@ -156,24 +156,32 @@ void lcd_clear() {
     LCDDATA2 = 0;
 }
 
-void lcd_writeNumber(unsigned long value_10u) {
+void lcd_writeNumber(unsigned long value_10u, unsigned char noMillies) {
     if (value_10u >= 1000000) {
         writeOverload();
-    } else if (value_10u >= 10000) { //100-9999 mX => 4.20
-        unsigned char d1 = (unsigned char)((value_10u / 100000) % 10);
-        unsigned char d2 = (unsigned char)((value_10u / 10000) % 10);
-        unsigned char d3 = (unsigned char)((value_10u / 1000) % 10);
-        writeDigits(d1, d2, d3, 1);
-    } else if (value_10u >= 1000) { //10-99 mX => 42
-        unsigned char d2 = (unsigned char)(value_10u / 1000);
-        unsigned char d3 = (unsigned char)((value_10u / 100) % 10);
-        writeDigits(UCHAR_MAX, d2, d3, 0);
-    } else if (value_10u >= 100) { //1-9 mX => 4
-        unsigned char d3 = (unsigned char)(value_10u / 100);
-        writeDigits(UCHAR_MAX, UCHAR_MAX, d3, 0);
     } else {
-        writeDigits(UCHAR_MAX, UCHAR_MAX, 0, 0);
+        unsigned char d0 = (unsigned char)((value_10u / 100000) % 10);
+        unsigned char d1 = (unsigned char)((value_10u / 10000) % 10);
+        unsigned char d2 = (unsigned char)((value_10u / 1000) % 10);
+        unsigned char d3 = (unsigned char)((value_10u / 100) % 10);
+        if ((value_10u >= 10000) || (noMillies != 0)) { //100-9999 mX => 4.20
+            writeDigits(d0, d1, d2, 1);
+        } else if (value_10u >= 1000) { //10-99 mX => 42
+            writeDigits(UCHAR_MAX, d2, d3, 0);
+        } else if (value_10u >= 100) { //1-9 mX => 4
+            writeDigits(UCHAR_MAX, UCHAR_MAX, d3, 0);
+        } else {
+            writeDigits(UCHAR_MAX, UCHAR_MAX, 0, 0);
+        }
     }
+}
+
+void lcd_writeValue(unsigned long value_10u) {
+    lcd_writeNumber(value_10u, 1);
+}
+
+void lcd_writeMilliValue(unsigned long value_10u) {
+    lcd_writeNumber(value_10u, 0);
 }
 
 void lcd_writeUnitAndType(unsigned char unitIndex, unsigned char typeIndex) {
