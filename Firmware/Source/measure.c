@@ -10,11 +10,11 @@
 #define VOLTAGE_RATIO  320L //3.2:1 ratio (2K2:1K)
 #define CURRENT_RATIO  100L //1V is 1A (3V max)
 
-const unsigned long VOLTAGE_ADC_OFFSET = 4; //just a guess
-const unsigned long CURRENT_ADC_OFFSET = 2; //just a guess
+const unsigned int VOLTAGE_ADC_OFFSET = 0; //just a guess
+const unsigned int CURRENT_ADC_OFFSET = 2; //just a guess
 
-const unsigned long VOLTAGE_ERROR_SCALE =  500; //0.5%
-const unsigned long CURRENT_ERROR_SCALE = 1000; //1.0%
+const int VOLTAGE_ERROR_SCALE =     0; // 0.0%
+const int CURRENT_ERROR_SCALE = -1000; //-1.0%
 
 
 void measure_init() {
@@ -48,34 +48,38 @@ unsigned int getRawAdc(unsigned char channel) {
     return ADRES;
 }
 
-unsigned long getVoltage_10u(unsigned char channel) {
+unsigned int getVoltage_1m(unsigned char channel) {
     unsigned int adc = getRawAdc(channel);
     if (adc < ADC_MAX) {
-        if (adc <= VOLTAGE_ADC_OFFSET) { adc = 0; } else { adc = adc; }
-        unsigned long value = adc * VREF * VOLTAGE_RATIO / ADC_MAX;
-        unsigned long errorValue = value * VOLTAGE_ERROR_SCALE / 100000;
-        return ((value - errorValue) / 1000) * 1000;
+        if (adc <= VOLTAGE_ADC_OFFSET) { adc = 0; } else { adc = adc - VOLTAGE_ADC_OFFSET; }
+        long value = (long)adc * VREF * VOLTAGE_RATIO / ADC_MAX / 100L;
+        long errorValue = value * VOLTAGE_ERROR_SCALE / 1000L / 100L;
+        long newValue = value + errorValue;
+        if (newValue < 0) { newValue = 0; }
+        return (unsigned int)newValue;
     } else {
-        return LONG_MAX;
+        return INT_MAX;
     }
 }
 
-unsigned long measure_getVoltageIn_10u() {
-    return getVoltage_10u(9);
+unsigned int measure_getVoltageIn_10u() {
+    return getVoltage_1m(9);
 }
 
-unsigned long measure_getVoltageOut_10u() {
-    return getVoltage_10u(8);
+unsigned int measure_getVoltageOut_1m() {
+    return getVoltage_1m(8);
 }
 
-unsigned long measure_getCurrent_10u() {
+unsigned int measure_getCurrent_1m() {
     unsigned int adc = getRawAdc(10);
     if (adc < ADC_MAX) {
-        if (adc <= CURRENT_ADC_OFFSET) { adc = 0; } else { adc = adc; }
-        unsigned long value = adc * VREF * CURRENT_RATIO / ADC_MAX;
-        unsigned long errorValue = value * CURRENT_ERROR_SCALE / 100000;
-        return ((value - errorValue) / 1000) * 1000;
+        if (adc <= CURRENT_ADC_OFFSET) { adc = 0; } else { adc = adc - CURRENT_ADC_OFFSET; }
+        long value = (long)adc * VREF * CURRENT_RATIO / ADC_MAX / 100L;
+        long errorValue = value * CURRENT_ERROR_SCALE / 1000L / 100L;
+        long newValue = value + errorValue;
+        if (newValue < 0) { newValue = 0; }
+        return (unsigned int)newValue;
     } else {
-        return LONG_MAX;
+        return INT_MAX;
     }
 }

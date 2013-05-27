@@ -2,8 +2,8 @@
 #define	MEASURE_H
 
 void measure_init();
-unsigned long measure_getVoltageIn_10u();
-unsigned long measure_getVoltageOut_10u();
-unsigned long measure_getCurrent_10u();
+unsigned int measure_getVoltageIn_1m();
+unsigned int measure_getVoltageOut_1m();
+unsigned int measure_getCurrent_1m();
 
 #endif	/* MEASURE_H */

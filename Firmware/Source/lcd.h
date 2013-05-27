@@ -3,8 +3,8 @@
 
 void lcd_init();
 void lcd_clear();
-void lcd_writeValue(unsigned long value_10u);
-void lcd_writeMilliValue(unsigned long value_10u);
+void lcd_writeValue(unsigned int value_1m);
+void lcd_writeMilliValue(unsigned int value_1m);
 void lcd_writeUnitAndType(unsigned char unitIndex, unsigned char typeIndex);
 
 #endif

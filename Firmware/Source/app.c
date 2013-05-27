@@ -72,41 +72,41 @@ unsigned char getButtonMask() {
 }
 
 
-void processMinMax(unsigned long value, unsigned long *min, unsigned long *max) {
-    if (value == LONG_MAX) { return; }
-    if (*min == LONG_MAX) { *min = value; } else if (value < *min) { *min = value; }
-    if (*max == LONG_MAX) { *max = value; } else if (value > *max) { *max = value; }
+void processMinMax(unsigned int value, unsigned int *min, unsigned int *max) {
+    if (value == INT_MAX) { return; }
+    if (*min == INT_MAX) { *min = value; } else if (value < *min) { *min = value; }
+    if (*max == INT_MAX) { *max = value; } else if (value > *max) { *max = value; }
 }
 
-void processAvg(unsigned long sum, unsigned int count, unsigned long *avg) {
-    if ((sum == LONG_MAX) || (count == 0)) {
-        *avg = LONG_MAX;
+void processAvg(unsigned long sum, unsigned int count, unsigned int *avg) {
+    if ((sum == INT_MAX) || (count == 0)) {
+        *avg = INT_MAX;
     } else {
         unsigned long value = sum / count;
-        *avg = value;
+        *avg = (unsigned int)value;
     }
 }
 
-const unsigned char AVG_COUNT = 50;
+const unsigned char AVG_COUNT = 60;
 
-unsigned long AvgCurrent = LONG_MAX, MinCurrent = LONG_MAX, MaxCurrent = LONG_MAX;
-unsigned long AvgVoltage = LONG_MAX, MinVoltage = LONG_MAX, MaxVoltage = LONG_MAX;
-unsigned long AvgPower   = LONG_MAX, MinPower   = LONG_MAX, MaxPower   = LONG_MAX;
+unsigned int AvgCurrent = INT_MAX, MinCurrent = INT_MAX, MaxCurrent = INT_MAX;
+unsigned int AvgVoltage = INT_MAX, MinVoltage = INT_MAX, MaxVoltage = INT_MAX;
+unsigned int AvgPower   = INT_MAX, MinPower   = INT_MAX, MaxPower   = INT_MAX;
 
 void measure() {
     clrwdt();
     unsigned long sumCurrent = 0, sumVoltage = 0, sumPower = 0;
     unsigned int  cntCurrent = 0, cntVoltage = 0, cntPower = 0;
     for (unsigned char i=0; i<AVG_COUNT; i++) {
-        unsigned long current = measure_getCurrent_10u();
-        unsigned long voltage = measure_getVoltageOut_10u();
-        unsigned long power   = ((current == LONG_MAX) || (voltage == LONG_MAX)) ? LONG_MAX : (current/100) * (voltage/100) / 10;
+        unsigned int current = measure_getCurrent_1m();
+        unsigned int voltage = measure_getVoltageOut_1m();
+        unsigned int power   = ((current == INT_MAX) || (voltage == INT_MAX)) ? INT_MAX : (unsigned int)((unsigned long)current * (unsigned long)voltage / 1000L);
         processMinMax(current, &MinCurrent, &MaxCurrent);
         processMinMax(voltage, &MinVoltage, &MaxVoltage);
         processMinMax(power,   &MinPower,   &MaxPower);
-        if (current < LONG_MAX) { sumCurrent += current; cntCurrent += 1; }
-        if (voltage < LONG_MAX) { sumVoltage += voltage; cntVoltage += 1; }
-        if (power   < LONG_MAX) { sumPower   += power;   cntPower   += 1; }
+        if (current < INT_MAX) { sumCurrent += current; cntCurrent += 1; }
+        if (voltage < INT_MAX) { sumVoltage += voltage; cntVoltage += 1; }
+        if (power   < INT_MAX) { sumPower   += power;   cntPower   += 1; }
     }
     processAvg(sumCurrent, cntCurrent, &AvgCurrent);
     processAvg(sumVoltage, cntVoltage, &AvgVoltage);
@@ -114,12 +114,12 @@ void measure() {
 }
 
 void resetMinMax() {
-    MinCurrent = LONG_MAX;
-    MaxCurrent = LONG_MAX;
-    MinVoltage = LONG_MAX;
-    MaxVoltage = LONG_MAX;
-    MinPower   = LONG_MAX;
-    MaxPower   = LONG_MAX;
+    MinCurrent = INT_MAX;
+    MaxCurrent = INT_MAX;
+    MinVoltage = INT_MAX;
+    MaxVoltage = INT_MAX;
+    MinPower   = INT_MAX;
+    MaxPower   = INT_MAX;
 }
 
 void showMeasurement(unsigned char unitIndex, unsigned char typeIndex) {
