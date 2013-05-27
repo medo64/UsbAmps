@@ -8,6 +8,8 @@
       <itemPath>lcd.h</itemPath>
       <itemPath>touch.h</itemPath>
       <itemPath>measure.h</itemPath>
+      <itemPath>settings.h</itemPath>
+      <itemPath>calibrate.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -21,6 +23,8 @@
       <itemPath>lcd.c</itemPath>
       <itemPath>touch.c</itemPath>
       <itemPath>measure.c</itemPath>
+      <itemPath>settings.c</itemPath>
+      <itemPath>calibrate.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

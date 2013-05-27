@@ -1,10 +1,12 @@
 #include <pic16f1934.h>
 #include <pic.h>
 #include <limits.h>
+#include "calibrate.h"
 #include "config.h"
 #include "lcd.h"
 #include "measure.h"
 #include "touch.h"
+#include "settings.h"
 
 
 void measure();
@@ -18,6 +20,19 @@ void main() {
     lcd_init();
     measure_init();
     touch_init();
+
+    lcd_writeLoading();
+
+    if (settings_getAdcCurrentOffset() == INT_MAX) { calibrate(); }
+    if (touch_b1_pressed() && touch_b2_pressed()) { //both keys are needed to enter calibrate
+        while (touch_b1_pressed()) {  clrwdt(); } //b1 needs to be released first
+        if (touch_b2_pressed()) { //b2 is still presed
+            lcd_writeCalibration();
+            while (touch_b1_pressed() || touch_b2_pressed()) {  clrwdt(); } //wait for b2 to be released also
+            calibrate();
+        }
+    }
+
 
     unsigned char unitIndex = 0; //0:current; 1:voltage; 2:power
     unsigned char typeIndex = 0; //0:avg; 1:max; 2:min

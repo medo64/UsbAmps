@@ -6,9 +6,9 @@
             <name>UsbAmps</name>
             <creation-uuid>505716da-22bf-48ee-b280-bc9f7f993579</creation-uuid>
             <make-project-type>0</make-project-type>
-            <c-extensions>c</c-extensions>
+            <c-extensions/>
             <cpp-extensions/>
-            <header-extensions>h</header-extensions>
+            <header-extensions>c,h</header-extensions>
             <sourceEncoding>ISO-8859-1</sourceEncoding>
             <make-dep-projects/>
         </data>

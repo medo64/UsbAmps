@@ -41,22 +41,26 @@ const unsigned char DIGIT_SEGMENTS[] = {
                                            0b00000001, 0b00100001, 0b00011100  //D3: 9 ABCD FG
                                        };
 const unsigned char DECIMAL_POINT_SEGMENTS[] = { 0b00100000, 0b00000000, 0b00000000 };
-const unsigned char OVERLOAD_SEGMENTS[] = { 0b01011000, 0b10000010, 0b11100001 };
 
 //LCDDATA0:  C2  A1 DP1  E2  F1  G1   -  C3
 //LCDDATA1:  D2   -  D3  E3  G2  A2  F2  G3
 //LCDDATA2:  E1  D1  C1  B3  A3  F3  B2  B1
 const unsigned char UNITTYPE_SEGMENTS[] = {
-                                           0b00010000, 0b00000010, 0b00000000, //-I-:     EF
-                                           0b00000000, 0b00010000, 0b00000100, //--I:     EF
-                                           0b00001000, 0b00000000, 0b10000000, //I--:     EF
-                                           0b10010000, 0b10000010, 0b00000010, //-U-:  BCDEF
-                                           0b00000001, 0b00110000, 0b00010100, //--U:  BCDEF
-                                           0b00001000, 0b00000000, 0b11100001, //U--:  BCDEF
-                                           0b00010000, 0b00001110, 0b00000010, //-P-: AB  EFG
-                                           0b00000000, 0b00010001, 0b00011100, //--P: AB  EFG
-                                           0b01001100, 0b00000000, 0b10000001, //P--: AB  EFG
-                                       };
+                                              0b00010000, 0b00000010, 0b00000000, //-I-:     EF
+                                              0b00000000, 0b00010000, 0b00000100, //--I:     EF
+                                              0b00001000, 0b00000000, 0b10000000, //I--:     EF
+                                              0b10010000, 0b10000010, 0b00000010, //-U-:  BCDEF
+                                              0b00000001, 0b00110000, 0b00010100, //--U:  BCDEF
+                                              0b00001000, 0b00000000, 0b11100001, //U--:  BCDEF
+                                              0b00010000, 0b00001110, 0b00000010, //-P-: AB  EFG
+                                              0b00000000, 0b00010001, 0b00011100, //--P: AB  EFG
+                                              0b01001100, 0b00000000, 0b10000001, //P--: AB  EFG
+                                          };
+
+const unsigned char CALIBRATION_SEGMENTS[] = { 0b11011010, 0b01111110, 0b11000110 };
+const unsigned char ERROR_SEGMENTS[] = { 0b01011100, 0b01011001, 0b11000000 };
+const unsigned char LOADING_SEGMENTS[] = { 0b00000000, 0b00001000, 0b00000000 };
+const unsigned char OVERLOAD_SEGMENTS[] = { 0b01011000, 0b10000010, 0b11100001 };
 
 
 void lcd_init() {
@@ -144,21 +148,37 @@ void writeDigits(unsigned char digit1, unsigned char digit2, unsigned char digit
     LCDDATA2 = segments2;
 }
 
-void writeOverload() {
-    LCDDATA0 = OVERLOAD_SEGMENTS[0];
-    LCDDATA1 = OVERLOAD_SEGMENTS[1];
-    LCDDATA2 = OVERLOAD_SEGMENTS[2];
-}
-
 void lcd_clear() {
     LCDDATA0 = 0;
     LCDDATA1 = 0;
     LCDDATA2 = 0;
 }
 
+
+void lcd_writeCalibration() {
+    LCDDATA0 = CALIBRATION_SEGMENTS[0];
+    LCDDATA1 = CALIBRATION_SEGMENTS[1];
+    LCDDATA2 = CALIBRATION_SEGMENTS[2];
+}
+
+void lcd_writeError() {
+    LCDDATA0 = ERROR_SEGMENTS[0];
+    LCDDATA1 = ERROR_SEGMENTS[1];
+    LCDDATA2 = ERROR_SEGMENTS[2];
+}
+
+void lcd_writeLoading() {
+    LCDDATA0 = LOADING_SEGMENTS[0];
+    LCDDATA1 = LOADING_SEGMENTS[1];
+    LCDDATA2 = LOADING_SEGMENTS[2];
+}
+
+
 void lcd_writeNumber(unsigned int value_1m, unsigned char noMillies) {
     if (value_1m >= 10000) {
-        writeOverload();
+        LCDDATA0 = OVERLOAD_SEGMENTS[0];
+        LCDDATA1 = OVERLOAD_SEGMENTS[1];
+        LCDDATA2 = OVERLOAD_SEGMENTS[2];
     } else {
         unsigned char d0 = (unsigned char)((value_1m / 1000) % 10);
         unsigned char d1 = (unsigned char)((value_1m / 100) % 10);

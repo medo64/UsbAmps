@@ -1,17 +1,22 @@
 #include <pic.h>
 #include <limits.h>
 #include "config.h"
+#include "settings.h"
 
 
 #define VREF       2048L
 #define ADC_COUNT  1024L
 #define ADC_MAX    1023L
 
+#define ADC_CHANNEL_CURRENT     10
+#define ADC_CHANNEL_VOLTAGE_IN   9
+#define ADC_CHANNEL_VOLTAGE_OUT  8
+
 #define VOLTAGE_RATIO  320L //3.2:1 ratio (2K2:1K)
 #define CURRENT_RATIO  100L //1V is 1A (3V max)
 
-const unsigned int VOLTAGE_ADC_OFFSET = 0; //just a guess
-const unsigned int CURRENT_ADC_OFFSET = 2; //just a guess
+unsigned int AdcVoltageOffset;
+unsigned int AdcCurrentOffset;
 
 const int VOLTAGE_ERROR_SCALE =     0; // 0.0%
 const int CURRENT_ERROR_SCALE = -1000; //-1.0%
@@ -37,6 +42,9 @@ void measure_init() {
     CHS1 = 1;
     CHS0 = 1;
     ADON = 1; //ADC is enabled
+
+    AdcVoltageOffset = settings_getAdcVoltageOffset();
+    AdcCurrentOffset = settings_getAdcCurrentOffset();
 }
 
 unsigned int getRawAdc(unsigned char channel) {
@@ -51,7 +59,7 @@ unsigned int getRawAdc(unsigned char channel) {
 unsigned int getVoltage_1m(unsigned char channel) {
     unsigned int adc = getRawAdc(channel);
     if (adc < ADC_MAX) {
-        if (adc <= VOLTAGE_ADC_OFFSET) { adc = 0; } else { adc = adc - VOLTAGE_ADC_OFFSET; }
+        if (adc <= AdcVoltageOffset) { adc = 0; } else { adc = adc - AdcVoltageOffset; }
         long value = (long)adc * VREF * VOLTAGE_RATIO / ADC_MAX / 100L;
         long errorValue = value * VOLTAGE_ERROR_SCALE / 1000L / 100L;
         long newValue = value + errorValue;
@@ -63,17 +71,17 @@ unsigned int getVoltage_1m(unsigned char channel) {
 }
 
 unsigned int measure_getVoltageIn_10u() {
-    return getVoltage_1m(9);
+    return getVoltage_1m(ADC_CHANNEL_VOLTAGE_IN);
 }
 
 unsigned int measure_getVoltageOut_1m() {
-    return getVoltage_1m(8);
+    return getVoltage_1m(ADC_CHANNEL_VOLTAGE_OUT);
 }
 
 unsigned int measure_getCurrent_1m() {
-    unsigned int adc = getRawAdc(10);
+    unsigned int adc = getRawAdc(ADC_CHANNEL_CURRENT);
     if (adc < ADC_MAX) {
-        if (adc <= CURRENT_ADC_OFFSET) { adc = 0; } else { adc = adc - CURRENT_ADC_OFFSET; }
+        if (adc <= AdcCurrentOffset) { adc = 0; } else { adc = adc - AdcCurrentOffset; }
         long value = (long)adc * VREF * CURRENT_RATIO / ADC_MAX / 100L;
         long errorValue = value * CURRENT_ERROR_SCALE / 1000L / 100L;
         long newValue = value + errorValue;
@@ -82,4 +90,9 @@ unsigned int measure_getCurrent_1m() {
     } else {
         return INT_MAX;
     }
+}
+
+
+unsigned int measure_getRawCurrent() {
+    return getRawAdc(ADC_CHANNEL_CURRENT);
 }
