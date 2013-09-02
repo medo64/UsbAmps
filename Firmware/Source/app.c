@@ -102,7 +102,6 @@ void processAvg(unsigned long sum, unsigned int count, unsigned int *avg) {
     }
 }
 
-const unsigned char AVG_COUNT = 60;
 
 unsigned int AvgCurrent = INT_MAX, MinCurrent = INT_MAX, MaxCurrent = INT_MAX;
 unsigned int AvgVoltage = INT_MAX, MinVoltage = INT_MAX, MaxVoltage = INT_MAX;
@@ -112,7 +111,7 @@ void measure() {
     clrwdt();
     unsigned long sumCurrent = 0, sumVoltage = 0, sumPower = 0;
     unsigned int  cntCurrent = 0, cntVoltage = 0, cntPower = 0;
-    for (unsigned char i=0; i<AVG_COUNT; i++) {
+    for (unsigned char i=0; i<SETTINGS_AVERAGE_COUNT; i++) {
         unsigned int current = measure_getCurrent_1m();
         unsigned int voltage = measure_getVoltageOut_1m();
         unsigned int power   = ((current == INT_MAX) || (voltage == INT_MAX)) ? INT_MAX : (unsigned int)((unsigned long)current * (unsigned long)voltage / 1000L);

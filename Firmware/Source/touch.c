@@ -2,6 +2,9 @@
 #include "config.h"
 
 
+#define TOUCH_MAX_COUNT 255
+
+
 void touch_init() {
     TRISD = TRISD | 0b00000110; //RD2, RD1 are inputs
     ANSELD = ANSELD | 0b00000110; //RD2, RD1 are analog
@@ -48,11 +51,11 @@ unsigned char touch_bx_stop() {
 bit touch_b1_pressed() {
     touch_b1_start();
     __delay_us(500);
-    return (touch_bx_stop() < 255) ? 1 : 0;
+    return (touch_bx_stop() < TOUCH_MAX_COUNT) ? 1 : 0;
 }
 
 bit touch_b2_pressed() {
     touch_b2_start();
     __delay_us(500);
-    return (touch_bx_stop() < 255) ? 1 : 0;
+    return (touch_bx_stop() < TOUCH_MAX_COUNT) ? 1 : 0;
 }

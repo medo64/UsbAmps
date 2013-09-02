@@ -1,9 +1,6 @@
 #include <pic.h>
 #include <limits.h>
-
-
-#define THREE_DIGIT_MILLIAMPS 0
-//#define THREE_DIGIT_MILLIAMPS 1
+#include "settings.h"
 
 
 //LCDDATA0:  C2  A1 DP1  E2  F1  G1   -  C3
@@ -191,7 +188,7 @@ void lcd_writeNumber(unsigned int value_1m, unsigned char noMillies) {
         if ((value_1m >= 1000) || (noMillies != 0)) { //100-9999 mX => 4.20
             writeDigits(d0, d1, d2, 1);
         } else if (value_1m >= 100) { //100-9999 mX => 4.20
-            if (THREE_DIGIT_MILLIAMPS) {
+            if (SETTINGS_THREE_DIGIT_MILLIAMPS) {
                 writeDigits(d1, d2, d3, 0);
             } else {
                 writeDigits(d0, d1, d2, 1);
