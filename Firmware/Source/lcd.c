@@ -2,6 +2,10 @@
 #include <limits.h>
 
 
+#define THREE_DIGIT_MILLIAMPS 0
+//#define THREE_DIGIT_MILLIAMPS 1
+
+
 //LCDDATA0:  C2  A1 DP1  E2  F1  G1   -  C3
 //LCDDATA1:  D2   -  D3  E3  G2  A2  F2  G3
 //LCDDATA2:  E1  D1  C1  B3  A3  F3  B2  B1
@@ -184,8 +188,14 @@ void lcd_writeNumber(unsigned int value_1m, unsigned char noMillies) {
         unsigned char d1 = (unsigned char)((value_1m / 100) % 10);
         unsigned char d2 = (unsigned char)((value_1m / 10) % 10);
         unsigned char d3 = (unsigned char)(value_1m % 10);
-        if ((value_1m >= 100) || (noMillies != 0)) { //100-9999 mX => 4.20
+        if ((value_1m >= 1000) || (noMillies != 0)) { //100-9999 mX => 4.20
             writeDigits(d0, d1, d2, 1);
+        } else if (value_1m >= 100) { //100-9999 mX => 4.20
+            if (THREE_DIGIT_MILLIAMPS) {
+                writeDigits(d1, d2, d3, 0);
+            } else {
+                writeDigits(d0, d1, d2, 1);
+            }
         } else if (value_1m >= 10) { //10-99 mX => 42
             writeDigits(UCHAR_MAX, d2, d3, 0);
         } else if (value_1m >= 1) { //1-9 mX => 4
