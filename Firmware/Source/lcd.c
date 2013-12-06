@@ -75,7 +75,7 @@ void lcd_init() {
     LP0 = 1;
 
     LCDSE0 = 0b11111101; //SEG1 is not used
-    LCDSE1 = 0b10111111; //SEG14 is not used
+    LCDSE1 = 0b11111111;
     LCDSE2 = 0b11111111;
 
     LMUX1 = 0; //Common selection: Static bias
