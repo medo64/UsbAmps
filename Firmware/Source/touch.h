@@ -5,7 +5,7 @@
 
 void touch_init();
 
-bool touch_b1_pressed();
-bool touch_b2_pressed();
+bool touch_outer_pressed();
+bool touch_inner_pressed();
 
 #endif

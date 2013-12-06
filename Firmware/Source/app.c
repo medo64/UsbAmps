@@ -24,11 +24,11 @@ void main() {
     lcd_writeLoading();
 
     if (settings_getAdcCurrentOffset() == INT_MAX) { calibrate(); }
-    if (touch_b1_pressed() && touch_b2_pressed()) { //both keys are needed to enter calibrate
-        while (touch_b1_pressed()) {  clrwdt(); } //b1 needs to be released first
-        if (touch_b2_pressed()) { //b2 is still presed
+    if (touch_outer_pressed() && touch_inner_pressed()) { //both keys are needed to enter calibrate
+        while (touch_outer_pressed()) {  clrwdt(); } //outer button needs to be released first
+        if (touch_inner_pressed()) { //innter is still presed
             lcd_writeCalibration();
-            while (touch_b1_pressed() || touch_b2_pressed()) {  clrwdt(); } //wait for b2 to be released also
+            while (touch_inner_pressed() || touch_outer_pressed()) {  clrwdt(); } //wait for b2 to be released also
             calibrate();
         }
     }
@@ -81,8 +81,8 @@ void main() {
 
 unsigned char getButtonMask() {
     unsigned char mask = 0x00;
-    if (touch_b1_pressed()) { mask |= 0x01; }
-    if (touch_b2_pressed()) { mask |= 0x02; }
+    if (touch_outer_pressed()) { mask |= 0x01; }
+    if (touch_inner_pressed()) { mask |= 0x02; }
     return mask;
 }
 
