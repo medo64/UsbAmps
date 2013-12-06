@@ -1,9 +1,11 @@
 #ifndef TOUCH_H
-#define	TOUCH_H
+#define TOUCH_H
+
+#include <stdbool.h>
 
 void touch_init();
 
-bit touch_b1_pressed();
-bit touch_b2_pressed();
+bool touch_b1_pressed();
+bool touch_b2_pressed();
 
 #endif

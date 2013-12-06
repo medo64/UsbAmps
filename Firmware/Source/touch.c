@@ -1,4 +1,5 @@
 #include <pic.h>
+#include <stdbool.h>
 #include "config.h"
 
 
@@ -48,13 +49,13 @@ unsigned char touch_bx_stop() {
     }
 }
 
-bit touch_b1_pressed() {
+bool touch_b1_pressed() {
     touch_b1_start();
     __delay_us(500);
     return (touch_bx_stop() < TOUCH_MAX_COUNT) ? 1 : 0;
 }
 
-bit touch_b2_pressed() {
+bool touch_b2_pressed() {
     touch_b2_start();
     __delay_us(500);
     return (touch_bx_stop() < TOUCH_MAX_COUNT) ? 1 : 0;

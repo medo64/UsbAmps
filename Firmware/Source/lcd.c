@@ -1,5 +1,6 @@
-#include <pic.h>
 #include <limits.h>
+#include <pic.h>
+#include <stdbool.h>
 #include "settings.h"
 
 
