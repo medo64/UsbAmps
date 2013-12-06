@@ -5,5 +5,6 @@
 
 void init();
 void clrwdt();
+void wait_250ms();
 
 #endif

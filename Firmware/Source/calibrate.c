@@ -35,7 +35,7 @@ void calibrate() {
                 case 0: lcd_writeMilliValue(newAdcCurrentOffset); break;
                 case 1: lcd_writeCalibration(); break;
             }
-            __delay_ms(250);
+            wait_250ms();
         }
     } else {
         if (oldAdcCurrentOffset == INT_MAX) { oldAdcCurrentOffset = 2; } //just a guess in case it is first run and there is an error.
@@ -47,7 +47,7 @@ void calibrate() {
                 case 1: lcd_writeMilliValue(oldAdcCurrentOffset); break;
                 case 2: lcd_writeCalibration(); break;
             }
-            __delay_ms(250);
+            wait_250ms();
         }
     }
 }

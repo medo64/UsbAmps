@@ -5,7 +5,7 @@
 
 
 //LCDDATA0:  C2  A1 DP1  E2  F1  G1   -  C3
-//LCDDATA1:  D2   -  D3  E3  G2  A2  F2  G3
+//LCDDATA1:  D2 DP2  D3  E3  G2  A2  F2  G3
 //LCDDATA2:  E1  D1  C1  B3  A3  F3  B2  B1
 
 const unsigned char DIGIT_SEGMENTS[] = {
@@ -59,8 +59,8 @@ const unsigned char UNITTYPE_SEGMENTS[] = {
                                               0b01001100, 0b00000000, 0b10000001, //P--: AB  EFG
                                           };
 
-const unsigned char CALIBRATION_SEGMENTS[] = { 0b11011010, 0b01111110, 0b11000110 };
-const unsigned char ERROR_SEGMENTS[] = { 0b01011100, 0b01011001, 0b11000000 };
+const unsigned char CALIBRATION_SEGMENTS[] = { 0b11011010, 0b00111110, 0b11000110 };
+const unsigned char ERROR_SEGMENTS[] = { 0b01011100, 0b00011001, 0b11000000 };
 const unsigned char LOADING_SEGMENTS[] = { 0b00000000, 0b00001000, 0b00000000 };
 const unsigned char OVERLOAD_SEGMENTS[] = { 0b01011000, 0b10000010, 0b11100001 };
 

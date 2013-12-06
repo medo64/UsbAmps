@@ -1,4 +1,5 @@
 #include <pic.h>
+#include "config.h"
 
 
 #pragma config FOSC     = INTOSC
@@ -51,4 +52,8 @@ void init() {
 
 void clrwdt() {
     asm("CLRWDT");
+}
+
+void wait_250ms() {
+    __delay_ms(250);
 }

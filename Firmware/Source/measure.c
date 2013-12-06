@@ -47,6 +47,12 @@ void measure_init() {
     AdcCurrentOffset = settings_getAdcCurrentOffset();
 }
 
+void measure_reinit() {
+    AdcVoltageOffset = settings_getAdcVoltageOffset();
+    AdcCurrentOffset = settings_getAdcCurrentOffset();
+}
+
+
 unsigned int getRawAdc(unsigned char channel) {
     ADCON0 = (channel << 2) | 0x01; //Analog Channel Select bits / leave ADON
     __delay_us(10); //to discharge holding cap if there was measurement just before (at least 10us)

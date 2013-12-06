@@ -23,13 +23,32 @@ void main() {
 
     lcd_writeLoading();
 
-    if (settings_getAdcCurrentOffset() == INT_MAX) { calibrate(); }
-    if (touch_outer_pressed() && touch_inner_pressed()) { //both keys are needed to enter calibrate
+
+    if (settings_getAdcCurrentOffset() == INT_MAX) { //on first run you are still connected to PICkit; just wait
+        clrwdt();
+        wait_250ms(); //we ignore short power-up/down events
+        settings_setAdcCurrentOffset(INT_MAX-1);
+        while(true) {
+            clrwdt();
+            lcd_clear();
+            wait_250ms();
+            clrwdt();
+            lcd_writeLoading();
+            wait_250ms();
+        }
+    } else if (settings_getAdcCurrentOffset() == INT_MAX-1) { //on first real run do calibration
+        while (touch_inner_pressed() || touch_outer_pressed()) {  clrwdt(); } //both buttons have to be released
+        lcd_writeCalibration();
+        wait_250ms();
+        calibrate();
+        measure_reinit();
+    } else if (touch_outer_pressed() && touch_inner_pressed()) { //both keys are needed to enter calibrate
         while (touch_outer_pressed()) {  clrwdt(); } //outer button needs to be released first
         if (touch_inner_pressed()) { //innter is still presed
             lcd_writeCalibration();
             while (touch_inner_pressed() || touch_outer_pressed()) {  clrwdt(); } //wait for b2 to be released also
             calibrate();
+            measure_reinit();
         }
     }
 
@@ -37,7 +56,7 @@ void main() {
     unsigned char unitIndex = 0; //0:current; 1:voltage; 2:power
     unsigned char typeIndex = 0; //0:avg; 1:max; 2:min
 
-    while (1) {
+    while (true) {
         measure();
 
         unsigned char buttons = getButtonMask();
