@@ -7,6 +7,7 @@
 #include "measure.h"
 #include "touch.h"
 #include "settings.h"
+#include "io.h"
 
 
 void measure();
@@ -20,6 +21,7 @@ void main() {
     lcd_init();
     measure_init();
     touch_init();
+    io_init();
 
     lcd_writeLoading();
 
@@ -50,6 +52,10 @@ void main() {
             calibrate();
             measure_reinit();
         }
+    } else if (touch_inner_pressed()) { //inner key signifies High power mode (no USB connectivity)
+        lcd_writeHighPower();
+        io_dshort_on();
+        while (touch_inner_pressed() || touch_outer_pressed()) {  clrwdt(); } //both keys must be released
     }
 
 

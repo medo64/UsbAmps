@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=app.c config.c lcd.c touch.c measure.c settings.c calibrate.c
+SOURCEFILES_QUOTED_IF_SPACED=app.c config.c lcd.c touch.c measure.c settings.c calibrate.c io.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/app.p1 ${OBJECTDIR}/config.p1 ${OBJECTDIR}/lcd.p1 ${OBJECTDIR}/touch.p1 ${OBJECTDIR}/measure.p1 ${OBJECTDIR}/settings.p1 ${OBJECTDIR}/calibrate.p1
-POSSIBLE_DEPFILES=${OBJECTDIR}/app.p1.d ${OBJECTDIR}/config.p1.d ${OBJECTDIR}/lcd.p1.d ${OBJECTDIR}/touch.p1.d ${OBJECTDIR}/measure.p1.d ${OBJECTDIR}/settings.p1.d ${OBJECTDIR}/calibrate.p1.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/app.p1 ${OBJECTDIR}/config.p1 ${OBJECTDIR}/lcd.p1 ${OBJECTDIR}/touch.p1 ${OBJECTDIR}/measure.p1 ${OBJECTDIR}/settings.p1 ${OBJECTDIR}/calibrate.p1 ${OBJECTDIR}/io.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/app.p1.d ${OBJECTDIR}/config.p1.d ${OBJECTDIR}/lcd.p1.d ${OBJECTDIR}/touch.p1.d ${OBJECTDIR}/measure.p1.d ${OBJECTDIR}/settings.p1.d ${OBJECTDIR}/calibrate.p1.d ${OBJECTDIR}/io.p1.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/app.p1 ${OBJECTDIR}/config.p1 ${OBJECTDIR}/lcd.p1 ${OBJECTDIR}/touch.p1 ${OBJECTDIR}/measure.p1 ${OBJECTDIR}/settings.p1 ${OBJECTDIR}/calibrate.p1
+OBJECTFILES=${OBJECTDIR}/app.p1 ${OBJECTDIR}/config.p1 ${OBJECTDIR}/lcd.p1 ${OBJECTDIR}/touch.p1 ${OBJECTDIR}/measure.p1 ${OBJECTDIR}/settings.p1 ${OBJECTDIR}/calibrate.p1 ${OBJECTDIR}/io.p1
 
 # Source Files
-SOURCEFILES=app.c config.c lcd.c touch.c measure.c settings.c calibrate.c
+SOURCEFILES=app.c config.c lcd.c touch.c measure.c settings.c calibrate.c io.c
 
 
 CFLAGS=
@@ -134,6 +134,14 @@ ${OBJECTDIR}/calibrate.p1: calibrate.c  nbproject/Makefile-${CND_CONF}.mk
 	@-${MV} ${OBJECTDIR}/calibrate.d ${OBJECTDIR}/calibrate.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/calibrate.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
+${OBJECTDIR}/io.p1: io.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/io.p1.d 
+	@${RM} ${OBJECTDIR}/io.p1 
+	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  -D__DEBUG=1 --debugger=pickit3  --double=32 --float=24 --opt=default,+asm,-asmfile,+speed,-space,-debug --addrqual=ignore --mode=free -P -N255 --warn=0 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,+osccal,-resetbits,-download,-stackcall,+clib --output=-mcof,+elf "--errformat=%%f:%%l: error: %%s" "--warnformat=%%f:%%l: warning: %%s" "--msgformat=%%f:%%l: advisory: %%s"    -o${OBJECTDIR}/io.p1  io.c 
+	@-${MV} ${OBJECTDIR}/io.d ${OBJECTDIR}/io.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/io.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
 else
 ${OBJECTDIR}/app.p1: app.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR} 
@@ -190,6 +198,14 @@ ${OBJECTDIR}/calibrate.p1: calibrate.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=32 --float=24 --opt=default,+asm,-asmfile,+speed,-space,-debug --addrqual=ignore --mode=free -P -N255 --warn=0 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,+osccal,-resetbits,-download,-stackcall,+clib --output=-mcof,+elf "--errformat=%%f:%%l: error: %%s" "--warnformat=%%f:%%l: warning: %%s" "--msgformat=%%f:%%l: advisory: %%s"    -o${OBJECTDIR}/calibrate.p1  calibrate.c 
 	@-${MV} ${OBJECTDIR}/calibrate.d ${OBJECTDIR}/calibrate.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/calibrate.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/io.p1: io.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR} 
+	@${RM} ${OBJECTDIR}/io.p1.d 
+	@${RM} ${OBJECTDIR}/io.p1 
+	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=32 --float=24 --opt=default,+asm,-asmfile,+speed,-space,-debug --addrqual=ignore --mode=free -P -N255 --warn=0 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,+osccal,-resetbits,-download,-stackcall,+clib --output=-mcof,+elf "--errformat=%%f:%%l: error: %%s" "--warnformat=%%f:%%l: warning: %%s" "--msgformat=%%f:%%l: advisory: %%s"    -o${OBJECTDIR}/io.p1  io.c 
+	@-${MV} ${OBJECTDIR}/io.d ${OBJECTDIR}/io.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/io.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 endif
 
