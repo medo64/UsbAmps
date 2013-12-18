@@ -1,10 +1,13 @@
 #include <pic.h>
 
+#define DSHORT_TRIS     TRISC1
+#define DSHORT_LAT      LATC1
+
 
 void io_init() {
-    TRISC1 = 0; //C1 is an output
+    DSHORT_TRIS = 0; //C1 is an output
 }
 
 void io_dshort_on() {
-    LATC1 = 1;
+    DSHORT_LAT = 1;
 }

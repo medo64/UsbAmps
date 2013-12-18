@@ -10,8 +10,11 @@
 #include "io.h"
 
 
+#define BUTTON_OUTER  0x01
+#define BUTTON_INNER  0x02
+
 void measure();
-void resetMinMax();
+void resetStats();
 void showMeasurement(unsigned char unitIndex, unsigned char typeIndex);
 unsigned char getButtonMask();
 
@@ -70,35 +73,51 @@ void main() {
 
         unsigned char buttons = getButtonMask();
         if (buttons != 0) {
+
+            //display to user what comes next
             unsigned char counter = 0;
             unsigned char nextButtons = buttons;
             while (nextButtons != 0) {
-                counter = (counter + 1) % 2;
+                clrwdt();
                 measure();
                 nextButtons = getButtonMask();
                 buttons |= nextButtons;
                 switch (buttons) {
-                    case 0x01: lcd_writeUnitAndType((unitIndex + 1) % 3, 0); break; //current/vout/powerout
-                    case 0x02: lcd_writeUnitAndType(unitIndex, (typeIndex + 1) % 3); break; //avg/max/min
-                    case 0x03: //reset min/max
-                        if (counter == 0) {
+                    case BUTTON_OUTER: lcd_writeUnitAndType((unitIndex + 1) % 3, 0); break; //current/vout/powerout
+                    case BUTTON_INNER: lcd_writeUnitAndType(unitIndex, (typeIndex + 1) % 3); break; //avg/max/min
+                }
+
+                //detect long key press
+                counter += 1;
+                if (counter > 8) {
+                    counter = 0;
+                    switch (buttons) {
+                        case BUTTON_OUTER: //nothing
                             lcd_clear();
-                        } else {
+                            break;
+                        case BUTTON_INNER: //long press on inner - reset values
+                            lcd_writeStatsReset();
+                            resetStats();
+                            break;
+                        default: //any other key (e.g. both)
                             lcd_writeUnitAndType(unitIndex, typeIndex);
-                        }
-                        break;
+                            break;
+                    }
+                    while (getButtonMask() != 0) { clrwdt(); }
+                    buttons = 0; //don't do any other action
+                    showMeasurement(unitIndex, typeIndex);
+                    break;
                 }
             }
+
+            //actual work for short key presses
             switch (buttons) {
-                case 0x01: //current/vout/powerout
+                case BUTTON_OUTER: //current/vout/powerout
                     unitIndex = (unitIndex + 1) % 3;
                     typeIndex = 0;
                     break;
-                case 0x02: //avg/max/min
+                case BUTTON_INNER: //avg/max/min
                     typeIndex = (typeIndex + 1) % 3;
-                    break;
-                case 0x03: //reset min/max
-                    resetMinMax();
                     break;
             }
 
@@ -113,9 +132,9 @@ void main() {
 }
 
 unsigned char getButtonMask() {
-    unsigned char mask = 0x00;
-    if (touch_outer_pressed()) { mask |= 0x01; }
-    if (touch_inner_pressed()) { mask |= 0x02; }
+    unsigned char mask = 0;
+    if (touch_outer_pressed()) { mask |= BUTTON_OUTER; }
+    if (touch_inner_pressed()) { mask |= BUTTON_INNER; }
     return mask;
 }
 
@@ -160,13 +179,13 @@ void measure() {
     processAvg(sumPower  , cntPower,   &AvgPower);
 }
 
-void resetMinMax() {
-    MinCurrent = INT_MAX;
-    MaxCurrent = INT_MAX;
-    MinVoltage = INT_MAX;
-    MaxVoltage = INT_MAX;
-    MinPower   = INT_MAX;
-    MaxPower   = INT_MAX;
+void resetStats() {
+    MinCurrent = AvgCurrent;
+    MaxCurrent = AvgCurrent;
+    MinVoltage = AvgVoltage;
+    MaxVoltage = AvgVoltage;
+    MinPower   = AvgPower;
+    MaxPower   = AvgPower;
 }
 
 void showMeasurement(unsigned char unitIndex, unsigned char typeIndex) {
