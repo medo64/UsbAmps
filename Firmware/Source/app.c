@@ -61,8 +61,11 @@ void main() {
 
     unsigned char unitIndex = 0; //0:current; 1:voltage; 2:power
     unsigned char typeIndex = 0; //0:avg; 1:max; 2:min
+    unsigned char phaseCounter = 0;
 
     while (true) {
+        phaseCounter = (phaseCounter + 1) % 12;
+
         measure();
 
         unsigned char buttons = getButtonMask();
@@ -98,8 +101,13 @@ void main() {
                     resetMinMax();
                     break;
             }
-        } else {
-            showMeasurement(unitIndex, typeIndex);
+
+        } else { //display the value
+            if (SETTINGS_BLINK_ON_MIN_MAX && (typeIndex != 0) && (phaseCounter == 0)) { //if not current measurement, blink occasionally
+                lcd_clear();
+            } else {
+                showMeasurement(unitIndex, typeIndex);
+            }
         }
     }
 }

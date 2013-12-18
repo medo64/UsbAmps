@@ -11,6 +11,10 @@
  * digits (e.g. 0.54 when setting is false) or with three (542 when setting is
  * true). Default value is false. */
 
+#define SETTINGS_BLINK_ON_MIN_MAX  true
+/* Defines whether display will occasionally blink when non-actual value (i.e.
+ * min/max) is shown. Default value is true. */
+
 
 unsigned int settings_getAdcVoltageOffset();
 void settings_setAdcVoltageOffset(unsigned int value);
