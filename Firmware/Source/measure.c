@@ -1,6 +1,7 @@
 #include <pic.h>
 #include <limits.h>
 #include "config.h"
+#include "measure.h"
 #include "settings.h"
 
 
@@ -43,13 +44,14 @@ void measure_init() {
     CHS0 = 1;
     ADON = 1; //ADC is enabled
 
-    AdcVoltageOffset = settings_getAdcVoltageOffset();
-    AdcCurrentOffset = settings_getAdcCurrentOffset();
+    measure_reinit();
 }
 
 void measure_reinit() {
-    AdcVoltageOffset = settings_getAdcVoltageOffset();
     AdcCurrentOffset = settings_getAdcCurrentOffset();
+    AdcVoltageOffset = settings_getAdcVoltageOffset();
+    if (AdcCurrentOffset >= ADC_COUNT) { AdcCurrentOffset = 0; }
+    if (AdcVoltageOffset >= ADC_COUNT) { AdcVoltageOffset = 0; }
 }
 
 

@@ -3,7 +3,7 @@
 
 
 __eeprom unsigned int EEPROM_ADC_VOLTAGE_OFFSET = 0;
-__eeprom unsigned int EEPROM_ADC_CURRENT_OFFSET = INT_MAX;
+__eeprom unsigned int EEPROM_ADC_CURRENT_OFFSET = UINT_MAX;
 
 
 unsigned int settings_getAdcVoltageOffset() {

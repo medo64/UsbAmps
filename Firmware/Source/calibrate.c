@@ -7,15 +7,16 @@
 #include "config.h"
 
 
-#define VERIFY_COUNT     1000
-#define VERIFY_TOLERANCE   10
+#define CURRENT_OFFSET_MAX     5 //offset must be less than 5 (~10 mA)
+#define VERIFY_COUNT        2000
+#define VERIFY_TOLERANCE      20
 
 
 void calibrate() {
     unsigned int oldAdcCurrentOffset = settings_getAdcCurrentOffset();
-    unsigned int newAdcCurrentOffset = INT_MAX;
+    unsigned int newAdcCurrentOffset = UINT_MAX;
 
-    for (unsigned int i = 0; i < 10; i++) {
+    for (unsigned int i = 0; i < CURRENT_OFFSET_MAX; i++) {
         unsigned int invalidCount = 0;
         for (unsigned int j = 0; j < VERIFY_COUNT; j++) {
             clrwdt();
@@ -27,7 +28,7 @@ void calibrate() {
         }
     }
 
-    if (newAdcCurrentOffset < INT_MAX) {
+    if (newAdcCurrentOffset < UINT_MAX) {
         settings_setAdcCurrentOffset(newAdcCurrentOffset);
         for (unsigned char i=0; i<6; i++) {
             clrwdt();
@@ -38,8 +39,6 @@ void calibrate() {
             wait_250ms();
         }
     } else {
-        if (oldAdcCurrentOffset == INT_MAX) { oldAdcCurrentOffset = 2; } //just a guess in case it is first run and there is an error.
-        settings_setAdcCurrentOffset(oldAdcCurrentOffset);
         for (unsigned char i=0; i<6; i++) {
             clrwdt();
             switch (i % 3) {

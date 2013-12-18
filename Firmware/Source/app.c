@@ -26,10 +26,10 @@ void main() {
     lcd_writeLoading();
 
 
-    if (settings_getAdcCurrentOffset() == INT_MAX) { //on first run you are still connected to PICkit; just wait
+    if (settings_getAdcCurrentOffset() == UINT_MAX) { //on first run you are still connected to PICkit; just wait
         clrwdt();
         wait_250ms(); //we ignore short power-up/down events
-        settings_setAdcCurrentOffset(INT_MAX-1);
+        settings_setAdcCurrentOffset(UINT_MAX-1);
         while(true) {
             clrwdt();
             lcd_clear();
@@ -38,7 +38,7 @@ void main() {
             lcd_writeLoading();
             wait_250ms();
         }
-    } else if (settings_getAdcCurrentOffset() == INT_MAX-1) { //on first real run do calibration
+    } else if (settings_getAdcCurrentOffset() == UINT_MAX-1) { //on first real run do calibration
         while (touch_inner_pressed() || touch_outer_pressed()) {  clrwdt(); } //both buttons have to be released
         lcd_writeCalibration();
         wait_250ms();
