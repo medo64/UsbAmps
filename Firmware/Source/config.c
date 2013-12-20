@@ -54,6 +54,10 @@ void clrwdt() {
     asm("CLRWDT");
 }
 
+void wait_10ms() {
+    __delay_ms(10);
+}
+
 void wait_250ms() {
     __delay_ms(250);
 }

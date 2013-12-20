@@ -29,37 +29,62 @@ void main() {
     lcd_writeLoading();
 
 
+    //initial calibration
     if (settings_getAdcCurrentOffset() == UINT_MAX) { //on first run you are still connected to PICkit; just wait
         clrwdt();
         wait_250ms(); //we ignore short power-up/down events
         settings_setAdcCurrentOffset(UINT_MAX-1);
         while(true) {
             clrwdt();
-            lcd_clear();
+            lcd_writeStatsReset();
             wait_250ms();
             clrwdt();
             lcd_writeLoading();
             wait_250ms();
         }
     } else if (settings_getAdcCurrentOffset() == UINT_MAX-1) { //on first real run do calibration
-        while (touch_inner_pressed() || touch_outer_pressed()) {  clrwdt(); } //both buttons have to be released
         lcd_writeCalibration();
         wait_250ms();
         calibrate();
         measure_reinit();
-    } else if (touch_outer_pressed() && touch_inner_pressed()) { //both keys are needed to enter calibrate
-        while (touch_outer_pressed()) {  clrwdt(); } //outer button needs to be released first
-        if (touch_inner_pressed()) { //innter is still presed
+    }
+
+    lcd_writeLoading();
+
+
+    //check startup keys presses
+    if (touch_outer_pressed() && touch_inner_pressed()) { //both keys are needed to enter calibrate
+        bool enterCalibration = true;
+        for (unsigned char i=0; i<250; i++) { //first 2.5 seconds show nothing
+            clrwdt();
+            if (!(touch_outer_pressed() && touch_inner_pressed())) { enterCalibration = false; break; }
+            wait_10ms();
+        }
+        for (unsigned char i=0; i<250; i++) { //quick blink next 2.5 seconds
+            if (enterCalibration) {
+                clrwdt();
+                if (!(touch_outer_pressed() && touch_inner_pressed())) { enterCalibration = false; break; }
+                if (i % 30 == 0) {
+                    lcd_writeStatsReset();
+                } else if (i % 30 == 15) {
+                    lcd_writeLoading();
+                }
+                wait_10ms();
+            }
+        }
+        if (enterCalibration) {
             lcd_writeCalibration();
-            while (touch_inner_pressed() || touch_outer_pressed()) {  clrwdt(); } //wait for b2 to be released also
             calibrate();
             measure_reinit();
         }
+        lcd_writeLoading();
     } else if (touch_inner_pressed()) { //inner key signifies High power mode (no USB connectivity)
         lcd_writeHighPower();
         io_dshort_on();
-        while (touch_inner_pressed() || touch_outer_pressed()) {  clrwdt(); } //both keys must be released
     }
+
+
+    while (touch_inner_pressed() || touch_outer_pressed()) {  clrwdt(); } //both keys must be released to start
 
 
     unsigned char unitIndex = 0; //0:current; 1:voltage; 2:power
