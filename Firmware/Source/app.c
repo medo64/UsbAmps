@@ -92,7 +92,7 @@ void main() {
     unsigned char phaseCounter = 0;
 
     while (true) {
-        phaseCounter = (phaseCounter + 1) % 12;
+        phaseCounter = (phaseCounter + 1) % SETTINGS_LONG_BLINK_MULTIPLIER;
 
         measure();
 
@@ -114,7 +114,7 @@ void main() {
 
                 //detect long key press
                 counter += 1;
-                if (counter > 8) {
+                if (counter > SETTINGS_LONG_PRESS_MULTIPLIER) {
                     counter = 0;
                     switch (buttons) {
                         case BUTTON_OUTER: //nothing
