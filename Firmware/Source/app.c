@@ -36,10 +36,10 @@ void main() {
         settings_setAdcCurrentOffset(UINT_MAX-1);
         while(true) {
             clrwdt();
-            lcd_writeStatsReset();
+            lcd_writeAll();
             wait_250ms();
             clrwdt();
-            lcd_writeLoading();
+            lcd_clear();
             wait_250ms();
         }
     } else if (settings_getAdcCurrentOffset() == UINT_MAX-1) { //on first real run do calibration

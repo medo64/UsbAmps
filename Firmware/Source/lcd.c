@@ -189,6 +189,12 @@ void lcd_writeStatsReset() {
     LCDDATA2 = STATSRESET_SEGMENTS[2];
 }
 
+void lcd_writeAll() {
+    LCDDATA0 = 0xFF;
+    LCDDATA1 = 0xFF;
+    LCDDATA2 = 0xFF;
+}
+
 
 void lcd_writeNumber(unsigned int value_1m, unsigned char noMillies) {
     if (value_1m >= 10000) {

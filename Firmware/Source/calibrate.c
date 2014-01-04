@@ -9,7 +9,7 @@
 
 #define CURRENT_OFFSET_MAX     5 //offset must be less than 5 (~10 mA)
 #define VERIFY_COUNT        2000
-#define VERIFY_TOLERANCE      20
+#define VERIFY_TOLERANCE       5
 
 
 void calibrate() {

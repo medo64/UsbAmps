@@ -9,6 +9,7 @@ void lcd_writeError();
 void lcd_writeLoading();
 void lcd_writeHighPower();
 void lcd_writeStatsReset();
+void lcd_writeAll();
 
 void lcd_writeValue(unsigned int value_1m);
 void lcd_writeMilliValue(unsigned int value_1m);
