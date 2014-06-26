@@ -1,6 +1,5 @@
 #include <pic16f1934.h>
 #include <pic.h>
-#include <limits.h>
 #include <stdint.h>
 #include "calibrate.h"
 #include "config.h"
@@ -18,12 +17,12 @@
 
 void measure();
 void resetStats();
-void showMeasurement(unsigned char unitIndex, unsigned char typeIndex);
-unsigned char getButtonMask();
+void showMeasurement(uint8_t unitIndex, uint8_t typeIndex);
+uint8_t getButtonMask();
 
-unsigned int AvgCurrent  = INT_MAX, MinCurrent  = INT_MAX, MaxCurrent  = INT_MAX;
-unsigned int AvgVoltage  = INT_MAX, MinVoltage  = INT_MAX, MaxVoltage  = INT_MAX;
-unsigned int AvgPower    = INT_MAX, MinPower    = INT_MAX, MaxPower    = INT_MAX;
+uint16_t AvgCurrent  = INT16_MAX, MinCurrent  = INT16_MAX, MaxCurrent  = INT16_MAX;
+uint16_t AvgVoltage  = INT16_MAX, MinVoltage  = INT16_MAX, MaxVoltage  = INT16_MAX;
+uint16_t AvgPower    = INT16_MAX, MinPower    = INT16_MAX, MaxPower    = INT16_MAX;
 
 uint32_t TotalCapacity = 0;
 
@@ -39,10 +38,10 @@ void main() {
 
 
     //initial calibration
-    if (settings_getAdcCurrentOffset() == UINT_MAX) { //on first run you are still connected to PICkit; just wait
+    if (settings_getAdcCurrentOffset() == UINT16_MAX) { //on first run you are still connected to PICkit; just wait
         clrwdt();
         wait_250ms(); //we ignore short power-up/down events
-        settings_setAdcCurrentOffset(UINT_MAX-1);
+        settings_setAdcCurrentOffset(UINT16_MAX-1);
         while(true) {
             clrwdt();
             lcd_writeAll();
@@ -51,7 +50,7 @@ void main() {
             lcd_clear();
             wait_250ms();
         }
-    } else if (settings_getAdcCurrentOffset() == UINT_MAX-1) { //on first real run do calibration
+    } else if (settings_getAdcCurrentOffset() == UINT16_MAX-1) { //on first real run do calibration
         lcd_writeCalibration();
         wait_250ms();
         calibrate();
@@ -64,12 +63,12 @@ void main() {
     //check startup keys presses
     if (touch_outer_pressed() && touch_inner_pressed()) { //both keys are needed to enter calibrate
         bool enterCalibration = true;
-        for (unsigned char i=0; i<250; i++) { //first 2.5 seconds show nothing
+        for (uint8_t i=0; i<250; i++) { //first 2.5 seconds show nothing
             clrwdt();
             if (!(touch_outer_pressed() && touch_inner_pressed())) { enterCalibration = false; break; }
             wait_10ms();
         }
-        for (unsigned char i=0; i<250; i++) { //quick blink next 2.5 seconds
+        for (uint8_t i=0; i<250; i++) { //quick blink next 2.5 seconds
             if (enterCalibration) {
                 clrwdt();
                 if (!(touch_outer_pressed() && touch_inner_pressed())) { enterCalibration = false; break; }
@@ -96,9 +95,9 @@ void main() {
     while (touch_inner_pressed() || touch_outer_pressed()) {  clrwdt(); } //both keys must be released to start
 
 
-    unsigned char unitIndex = 0; //0:current; 1:voltage; 2:power
-    unsigned char typeIndex = 0; //0:avg; 1:max; 2:min
-    unsigned char phaseCounter = 0;
+    uint8_t unitIndex = 0; //0:current; 1:voltage; 2:power
+    uint8_t typeIndex = 0; //0:avg; 1:max; 2:min
+    uint8_t phaseCounter = 0;
 
 
     timer1_init();
@@ -108,12 +107,12 @@ void main() {
 
         measure();
 
-        unsigned char buttons = getButtonMask();
+        uint8_t buttons = getButtonMask();
         if (buttons != 0) {
 
             //display to user what comes next
-            unsigned char counter = 0;
-            unsigned char nextButtons = buttons;
+            uint8_t counter = 0;
+            uint8_t nextButtons = buttons;
             while (nextButtons != 0) {
                 clrwdt();
                 measure();
@@ -160,7 +159,7 @@ void main() {
 
         } else if (timer1_hasSecondPassed()) { //has one second passed
 
-            if (AvgCurrent < INT_MAX) {
+            if (AvgCurrent < INT16_MAX) {
                 TotalCapacity += AvgCurrent;
             }
 
@@ -174,26 +173,26 @@ void main() {
     }
 }
 
-unsigned char getButtonMask() {
-    unsigned char mask = 0;
+uint8_t getButtonMask() {
+    uint8_t mask = 0;
     if (touch_outer_pressed()) { mask |= BUTTON_OUTER; }
     if (touch_inner_pressed()) { mask |= BUTTON_INNER; }
     return mask;
 }
 
 
-void processMinMax(unsigned int value, unsigned int *min, unsigned int *max) {
-    if (value == INT_MAX) { return; }
-    if (*min == INT_MAX) { *min = value; } else if (value < *min) { *min = value; }
-    if (*max == INT_MAX) { *max = value; } else if (value > *max) { *max = value; }
+void processMinMax(uint16_t value, uint16_t *min, uint16_t *max) {
+    if (value == INT16_MAX) { return; }
+    if (*min == INT16_MAX) { *min = value; } else if (value < *min) { *min = value; }
+    if (*max == INT16_MAX) { *max = value; } else if (value > *max) { *max = value; }
 }
 
-void processAvg(unsigned long sum, unsigned int count, unsigned int *avg) {
-    if ((sum == INT_MAX) || (count == 0)) {
-        *avg = INT_MAX;
+void processAvg(uint32_t sum, uint16_t count, uint16_t *avg) {
+    if ((sum == INT16_MAX) || (count == 0)) {
+        *avg = INT16_MAX;
     } else {
-        unsigned long value = sum / count;
-        *avg = (unsigned int)value;
+        uint32_t value = sum / count;
+        *avg = (uint16_t)value;
     }
 }
 
@@ -201,18 +200,18 @@ void processAvg(unsigned long sum, unsigned int count, unsigned int *avg) {
 
 void measure() {
     clrwdt();
-    unsigned long sumCurrent = 0, sumVoltage = 0, sumPower = 0;
-    unsigned int  cntCurrent = 0, cntVoltage = 0, cntPower = 0;
-    for (unsigned char i=0; i<SETTINGS_AVERAGE_COUNT; i++) {
-        unsigned int current = measure_getCurrent_1m();
-        unsigned int voltage = measure_getVoltageOut_1m();
-        unsigned int power   = ((current == INT_MAX) || (voltage == INT_MAX)) ? INT_MAX : (unsigned int)((unsigned long)current * (unsigned long)voltage / 1000L);
+    uint32_t sumCurrent = 0, sumVoltage = 0, sumPower = 0;
+    uint16_t cntCurrent = 0, cntVoltage = 0, cntPower = 0;
+    for (uint8_t i=0; i<SETTINGS_AVERAGE_COUNT; i++) {
+        uint16_t current = measure_getCurrent_1m();
+        uint16_t voltage = measure_getVoltageOut_1m();
+        uint16_t power   = ((current == INT16_MAX) || (voltage == INT16_MAX)) ? INT16_MAX : (uint16_t)(((uint32_t)current * (uint32_t)voltage) / 1000L);
         processMinMax(current, &MinCurrent, &MaxCurrent);
         processMinMax(voltage, &MinVoltage, &MaxVoltage);
         processMinMax(power,   &MinPower,   &MaxPower);
-        if (current < INT_MAX) { sumCurrent += current; cntCurrent += 1; }
-        if (voltage < INT_MAX) { sumVoltage += voltage; cntVoltage += 1; }
-        if (power   < INT_MAX) { sumPower   += power;   cntPower   += 1; }
+        if (current < INT16_MAX) { sumCurrent += current; cntCurrent += 1; }
+        if (voltage < INT16_MAX) { sumVoltage += voltage; cntVoltage += 1; }
+        if (power   < INT16_MAX) { sumPower   += power;   cntPower   += 1; }
     }
     processAvg(sumCurrent, cntCurrent, &AvgCurrent);
     processAvg(sumVoltage, cntVoltage, &AvgVoltage);
@@ -231,7 +230,7 @@ void resetStats() {
 #endif
 }
 
-void showMeasurement(unsigned char unitIndex, unsigned char typeIndex) {
+void showMeasurement(uint8_t unitIndex, uint8_t typeIndex) {
     switch (unitIndex * 3 + typeIndex) {
         case 0: lcd_writeMilliValue(AvgCurrent); break;
         case 1: lcd_writeMilliValue(MaxCurrent); break;
@@ -246,7 +245,7 @@ void showMeasurement(unsigned char unitIndex, unsigned char typeIndex) {
         case 9:
         case 10:
         case 11: { //capacity
-            unsigned int capacityInmAh = (unsigned int)(TotalCapacity / 3600);
+            uint16_t capacityInmAh = (uint16_t)(TotalCapacity / 3600);
             lcd_writeMilliValue(capacityInmAh);
             break;
         }

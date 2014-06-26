@@ -2,6 +2,9 @@
 #define SETTINGS_H
 
 
+#include <stdint.h>
+
+
 #define SETTINGS_AVERAGE_COUNT  60
 /* Defines amount of smoothing for readings. Higher value will smooth readings
  * and make them more stable but at the cost of speed. Default value is 60. */
@@ -30,10 +33,10 @@
 /* Defines whether capacity is shown as fourth measurement option. */
 
 
-unsigned int settings_getAdcVoltageOffset();
-void settings_setAdcVoltageOffset(unsigned int value);
+uint16_t settings_getAdcVoltageOffset();
+void settings_setAdcVoltageOffset(uint16_t value);
 
-unsigned int settings_getAdcCurrentOffset();
-void settings_setAdcCurrentOffset(unsigned int value);
+uint16_t settings_getAdcCurrentOffset();
+void settings_setAdcCurrentOffset(uint16_t value);
 
 #endif

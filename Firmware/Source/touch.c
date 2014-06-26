@@ -1,5 +1,6 @@
 #include <pic.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include "config.h"
 
 
@@ -40,7 +41,7 @@ void touch_b2_start() {
     CPSON = 1; //Capacitive Sensing Module is enabled
 }
 
-unsigned char touch_bx_stop() {
+uint8_t touch_bx_stop() {
     CPSON = 0; //Capacitive Sensing Module is disabled
     if (TMR0IF) { //overflow happened, just return max value
         return 0xFF;

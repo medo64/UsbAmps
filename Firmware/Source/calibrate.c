@@ -1,5 +1,5 @@
-#include <limits.h>
 #include <pic.h>
+#include <stdint.h>
 #include "calibrate.h"
 #include "measure.h"
 #include "settings.h"
@@ -13,12 +13,12 @@
 
 
 void calibrate() {
-    unsigned int oldAdcCurrentOffset = settings_getAdcCurrentOffset();
-    unsigned int newAdcCurrentOffset = UINT_MAX;
+    uint16_t oldAdcCurrentOffset = settings_getAdcCurrentOffset();
+    uint16_t newAdcCurrentOffset = UINT16_MAX;
 
-    for (unsigned int i = 0; i < CURRENT_OFFSET_MAX; i++) {
-        unsigned int invalidCount = 0;
-        for (unsigned int j = 0; j < VERIFY_COUNT; j++) {
+    for (uint16_t i = 0; i < CURRENT_OFFSET_MAX; i++) {
+        uint16_t invalidCount = 0;
+        for (uint16_t j = 0; j < VERIFY_COUNT; j++) {
             clrwdt();
             if (measure_getRawCurrent() > i) { invalidCount += 1; }
         }
@@ -28,9 +28,9 @@ void calibrate() {
         }
     }
 
-    if (newAdcCurrentOffset < UINT_MAX) {
+    if (newAdcCurrentOffset < UINT16_MAX) {
         settings_setAdcCurrentOffset(newAdcCurrentOffset);
-        for (unsigned char i=0; i<6; i++) {
+        for (uint8_t i=0; i<6; i++) {
             clrwdt();
             switch (i % 3) {
                 case 0: lcd_writeMilliValue(newAdcCurrentOffset); break;
@@ -39,7 +39,7 @@ void calibrate() {
             wait_250ms();
         }
     } else {
-        for (unsigned char i=0; i<6; i++) {
+        for (uint8_t i=0; i<6; i++) {
             clrwdt();
             switch (i % 3) {
                 case 0: lcd_writeError(); break;

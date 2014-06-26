@@ -1,4 +1,3 @@
-#include <limits.h>
 #include <pic.h>
 #include <stdbool.h>
 #include "option.h"
@@ -9,7 +8,7 @@
 //LCDDATA1:  D2 DP2  D3  E3  G2  A2  F2  G3
 //LCDDATA2:  E1  D1  C1  B3  A3  F3  B2  B1
 
-const unsigned char DIGIT_SEGMENTS[] = {
+const uint8_t DIGIT_SEGMENTS[]         = {
                                            0b01001000, 0b00000000, 0b11100001, //D1: 0 ABCDEF
                                            0b00000000, 0b00000000, 0b00100001, //D1: 1  BC
                                            0b01000100, 0b00000000, 0b11000001, //D1: 2 AB DE G
@@ -42,33 +41,33 @@ const unsigned char DIGIT_SEGMENTS[] = {
                                            0b00000001, 0b00000000, 0b00011000, //D3: 7 ABC
                                            0b00000001, 0b00110001, 0b00011100, //D3: 8 ABCDEFG
                                            0b00000001, 0b00100001, 0b00011100  //D3: 9 ABCD FG
-                                       };
-const unsigned char DECIMAL_POINT_SEGMENTS[] = { 0b00100000, 0b00000000, 0b00000000 };
+                                         };
+const uint8_t DECIMAL_POINT_SEGMENTS[] = { 0b00100000, 0b00000000, 0b00000000 };
 
 //LCDDATA0:  C2  A1 DP1  E2  F1  G1   -  C3
 //LCDDATA1:  D2   -  D3  E3  G2  A2  F2  G3
 //LCDDATA2:  E1  D1  C1  B3  A3  F3  B2  B1
-const unsigned char UNITTYPE_SEGMENTS[] = {
-                                              0b00010000, 0b00000010, 0b00000000, //-I-:     EF
-                                              0b00000000, 0b00010000, 0b00000100, //--I:     EF
-                                              0b00001000, 0b00000000, 0b10000000, //I--:     EF
-                                              0b10010000, 0b10000010, 0b00000010, //-U-:  BCDEF
-                                              0b00000001, 0b00110000, 0b00010100, //--U:  BCDEF
-                                              0b00001000, 0b00000000, 0b11100001, //U--:  BCDEF
-                                              0b00010000, 0b00001110, 0b00000010, //-P-: AB  EFG
-                                              0b00000000, 0b00010001, 0b00011100, //--P: AB  EFG
-                                              0b01001100, 0b00000000, 0b10000001, //P--: AB  EFG
-                                              0b11011010, 0b00011111, 0b11011110, //CAP
-                                              0b11011010, 0b00011111, 0b11011110, //CAP
-                                              0b11011010, 0b00011111, 0b11011110, //CAP
-                                          };
+const uint8_t UNITTYPE_SEGMENTS[]      = {
+                                           0b00010000, 0b00000010, 0b00000000, //-I-:     EF
+                                           0b00000000, 0b00010000, 0b00000100, //--I:     EF
+                                           0b00001000, 0b00000000, 0b10000000, //I--:     EF
+                                           0b10010000, 0b10000010, 0b00000010, //-U-:  BCDEF
+                                           0b00000001, 0b00110000, 0b00010100, //--U:  BCDEF
+                                           0b00001000, 0b00000000, 0b11100001, //U--:  BCDEF
+                                           0b00010000, 0b00001110, 0b00000010, //-P-: AB  EFG
+                                           0b00000000, 0b00010001, 0b00011100, //--P: AB  EFG
+                                           0b01001100, 0b00000000, 0b10000001, //P--: AB  EFG
+                                           0b11011010, 0b00011111, 0b11011110, //CAP
+                                           0b11011010, 0b00011111, 0b11011110, //CAP
+                                           0b11011010, 0b00011111, 0b11011110, //CAP
+                                         };
 
-const unsigned char CALIBRATION_SEGMENTS[] = { 0b11011010, 0b00111110, 0b11000110 };
-const unsigned char ERROR_SEGMENTS[] = { 0b01011100, 0b00011001, 0b11000000 };
-const unsigned char LOADING_SEGMENTS[] = { 0b00000000, 0b00001000, 0b00000000 };
-const unsigned char HIGHPOWER_SEGMENTS[] = { 0b00011100, 0b00010011, 0b10111101 };
-const unsigned char STATSRESET_SEGMENTS[] = { 0b00000100, 0b00000001, 0b00000000 };
-const unsigned char OVERLOAD_SEGMENTS[] = { 0b01011000, 0b10000010, 0b11100001 };
+const uint8_t CALIBRATION_SEGMENTS[]   = { 0b11011010, 0b00111110, 0b11000110 };
+const uint8_t ERROR_SEGMENTS[]         = { 0b01011100, 0b00011001, 0b11000000 };
+const uint8_t LOADING_SEGMENTS[]       = { 0b00000000, 0b00001000, 0b00000000 };
+const uint8_t HIGHPOWER_SEGMENTS[]     = { 0b00011100, 0b00010011, 0b10111101 };
+const uint8_t STATSRESET_SEGMENTS[]    = { 0b00000100, 0b00000001, 0b00000000 };
+const uint8_t OVERLOAD_SEGMENTS[]      = { 0b01011000, 0b10000010, 0b11100001 };
 
 
 void lcd_init() {
@@ -119,27 +118,27 @@ void lcd_init() {
 }
 
 
-void writeDigits(unsigned char digit1, unsigned char digit2, unsigned char digit3, unsigned char includeDecimalPoint) {
-    unsigned char segments0 = 0;
-    unsigned char segments1 = 0;
-    unsigned char segments2 = 0;
+void writeDigits(uint8_t digit1, uint8_t digit2, uint8_t digit3, bool includeDecimalPoint) {
+    uint8_t segments0 = 0;
+    uint8_t segments1 = 0;
+    uint8_t segments2 = 0;
 
     if (digit1 < 10) {
-        unsigned char index1 = 0 + digit1 * 3;
+        uint8_t index1 = 0 + digit1 * 3;
         segments0 = segments0 | DIGIT_SEGMENTS[index1 + 0];
         segments1 = segments1 | DIGIT_SEGMENTS[index1 + 1];
         segments2 = segments2 | DIGIT_SEGMENTS[index1 + 2];
     }
 
     if (digit2 < 10) {
-        unsigned char index2 = 30 + digit2 * 3;
+        uint8_t index2 = 30 + digit2 * 3;
         segments0 = segments0 | DIGIT_SEGMENTS[index2 + 0];
         segments1 = segments1 | DIGIT_SEGMENTS[index2 + 1];
         segments2 = segments2 | DIGIT_SEGMENTS[index2 + 2];
     }
 
     if (digit3 < 10) {
-        unsigned char index3 = 60 + digit3 * 3;
+        uint8_t index3 = 60 + digit3 * 3;
         segments0 = segments0 | DIGIT_SEGMENTS[index3 + 0];
         segments1 = segments1 | DIGIT_SEGMENTS[index3 + 1];
         segments2 = segments2 | DIGIT_SEGMENTS[index3 + 2];
@@ -200,17 +199,17 @@ void lcd_writeAll() {
 }
 
 
-void lcd_writeNumber(unsigned int value_1m, unsigned char noMillies) {
+void lcd_writeNumber(uint16_t value_1m, bool noMillies) {
     if (value_1m >= 10000) {
         LCDDATA0 = OVERLOAD_SEGMENTS[0];
         LCDDATA1 = OVERLOAD_SEGMENTS[1];
         LCDDATA2 = OVERLOAD_SEGMENTS[2];
     } else {
-        unsigned char d0 = (unsigned char)((value_1m / 1000) % 10);
-        unsigned char d1 = (unsigned char)((value_1m / 100) % 10);
-        unsigned char d2 = (unsigned char)((value_1m / 10) % 10);
-        unsigned char d3 = (unsigned char)(value_1m % 10);
-        if ((value_1m >= 1000) || (noMillies != 0)) { //100-9999 mX => 4.20
+        uint8_t d0 = (uint8_t)((value_1m / 1000) % 10);
+        uint8_t d1 = (uint8_t)((value_1m / 100) % 10);
+        uint8_t d2 = (uint8_t)((value_1m / 10) % 10);
+        uint8_t d3 = (uint8_t)(value_1m % 10);
+        if ((value_1m >= 1000) || noMillies) { //100-9999 mX => 4.20
             writeDigits(d0, d1, d2, 1);
         } else if (value_1m >= 100) { //100-9999 mX => 4.20
             if (SETTINGS_THREE_DIGIT_MILLIAMPS) {
@@ -219,25 +218,25 @@ void lcd_writeNumber(unsigned int value_1m, unsigned char noMillies) {
                 writeDigits(d0, d1, d2, 1);
             }
         } else if (value_1m >= 10) { //10-99 mX => 42
-            writeDigits(UCHAR_MAX, d2, d3, 0);
+            writeDigits(UINT8_MAX, d2, d3, 0);
         } else if (value_1m >= 1) { //1-9 mX => 4
-            writeDigits(UCHAR_MAX, UCHAR_MAX, d3, 0);
+            writeDigits(UINT8_MAX, UINT8_MAX, d3, 0);
         } else {
-            writeDigits(UCHAR_MAX, UCHAR_MAX, 0, 0);
+            writeDigits(UINT8_MAX, UINT8_MAX, 0, 0);
         }
     }
 }
 
-void lcd_writeValue(unsigned int value_1m) {
+void lcd_writeValue(uint16_t value_1m) {
     lcd_writeNumber(value_1m, 1);
 }
 
-void lcd_writeMilliValue(unsigned int value_1m) {
+void lcd_writeMilliValue(uint16_t value_1m) {
     lcd_writeNumber(value_1m, 0);
 }
 
-void lcd_writeUnitAndType(unsigned char unitIndex, unsigned char typeIndex) {
-    unsigned char index = (unitIndex * 3 + typeIndex) * 3;
+void lcd_writeUnitAndType(uint8_t unitIndex, uint8_t typeIndex) {
+    uint8_t index = (unitIndex * 3 + typeIndex) * 3;
     LCDDATA0 = UNITTYPE_SEGMENTS[index + 0];
     LCDDATA1 = UNITTYPE_SEGMENTS[index + 1];
     LCDDATA2 = UNITTYPE_SEGMENTS[index + 2];

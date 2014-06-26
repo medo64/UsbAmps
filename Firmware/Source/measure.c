@@ -1,5 +1,4 @@
 #include <pic.h>
-#include <limits.h>
 #include "config.h"
 #include "measure.h"
 #include "settings.h"
@@ -16,11 +15,11 @@
 #define VOLTAGE_RATIO  320L //3.2:1 ratio (2K2:1K)
 #define CURRENT_RATIO  100L //1V is 1A (3V max)
 
-unsigned int AdcVoltageOffset;
-unsigned int AdcCurrentOffset;
+uint16_t AdcVoltageOffset;
+uint16_t AdcCurrentOffset;
 
-const int VOLTAGE_ERROR_SCALE =     0; // 0.0%
-const int CURRENT_ERROR_SCALE = -1000; //-1.0%
+const int16_t VOLTAGE_ERROR_SCALE =     0; // 0.0%
+const int16_t CURRENT_ERROR_SCALE = -1000; //-1.0%
 
 
 void measure_init() {
@@ -55,7 +54,7 @@ void measure_reinit() {
 }
 
 
-unsigned int getRawAdc(unsigned char channel) {
+uint16_t getRawAdc(uint8_t channel) {
     ADCON0 = (channel << 2) | 0x01; //Analog Channel Select bits / leave ADON
     __delay_us(10); //to discharge holding cap if there was measurement just before (at least 10us)
     ADGO = 1; //Setting this bit starts an A/D conversion cycle.
@@ -64,43 +63,43 @@ unsigned int getRawAdc(unsigned char channel) {
     return ADRES;
 }
 
-unsigned int getVoltage_1m(unsigned char channel) {
-    unsigned int adc = getRawAdc(channel);
+uint16_t getVoltage_1m(uint8_t channel) {
+    uint16_t adc = getRawAdc(channel);
     if (adc < ADC_MAX) {
         if (adc <= AdcVoltageOffset) { adc = 0; } else { adc = adc - AdcVoltageOffset; }
-        long value = (long)adc * VREF * VOLTAGE_RATIO / ADC_MAX / 100L;
-        long errorValue = value * VOLTAGE_ERROR_SCALE / 1000L / 100L;
-        long newValue = value + errorValue;
+        uint32_t value = (uint32_t)adc * VREF * VOLTAGE_RATIO / ADC_MAX / 100L;
+        uint32_t errorValue = value * VOLTAGE_ERROR_SCALE / 1000L / 100L;
+        uint32_t newValue = value + errorValue;
         if (newValue < 0) { newValue = 0; }
-        return (unsigned int)newValue;
+        return (uint16_t)newValue;
     } else {
-        return INT_MAX;
+        return INT16_MAX;
     }
 }
 
-unsigned int measure_getVoltageIn_10u() {
+uint16_t measure_getVoltageIn_10u() {
     return getVoltage_1m(ADC_CHANNEL_VOLTAGE_IN);
 }
 
-unsigned int measure_getVoltageOut_1m() {
+uint16_t measure_getVoltageOut_1m() {
     return getVoltage_1m(ADC_CHANNEL_VOLTAGE_OUT);
 }
 
-unsigned int measure_getCurrent_1m() {
-    unsigned int adc = getRawAdc(ADC_CHANNEL_CURRENT);
+uint16_t measure_getCurrent_1m() {
+    uint16_t adc = getRawAdc(ADC_CHANNEL_CURRENT);
     if (adc < ADC_MAX) {
         if (adc <= AdcCurrentOffset) { adc = 0; } else { adc = adc - AdcCurrentOffset; }
-        long value = (long)adc * VREF * CURRENT_RATIO / ADC_MAX / 100L;
-        long errorValue = value * CURRENT_ERROR_SCALE / 1000L / 100L;
-        long newValue = value + errorValue;
+        int32_t value = (int32_t)adc * VREF * CURRENT_RATIO / ADC_MAX / 100L;
+        int32_t errorValue = value * CURRENT_ERROR_SCALE / 1000L / 100L;
+        int32_t newValue = value + errorValue;
         if (newValue < 0) { newValue = 0; }
-        return (unsigned int)newValue;
+        return (uint16_t)newValue;
     } else {
-        return INT_MAX;
+        return INT16_MAX;
     }
 }
 
 
-unsigned int measure_getRawCurrent() {
+uint16_t measure_getRawCurrent() {
     return getRawAdc(ADC_CHANNEL_CURRENT);
 }

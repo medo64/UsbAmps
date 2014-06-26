@@ -3,6 +3,7 @@
 
 #define _XTAL_FREQ 16000000
 
+
 void init();
 void clrwdt();
 void wait_10ms();

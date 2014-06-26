@@ -1,24 +1,24 @@
-#include <limits.h>
+#include <stdint.h>
 #include "settings.h"
 
 
-__eeprom unsigned int EEPROM_ADC_VOLTAGE_OFFSET = 0;
-__eeprom unsigned int EEPROM_ADC_CURRENT_OFFSET = UINT_MAX;
+__eeprom uint16_t EEPROM_ADC_VOLTAGE_OFFSET = 0;
+__eeprom uint16_t EEPROM_ADC_CURRENT_OFFSET = UINT16_MAX;
 
 
-unsigned int settings_getAdcVoltageOffset() {
+uint16_t settings_getAdcVoltageOffset() {
     return EEPROM_ADC_VOLTAGE_OFFSET;
 }
 
-void settings_setAdcVoltageOffset(unsigned int value) {
+void settings_setAdcVoltageOffset(uint16_t value) {
     EEPROM_ADC_VOLTAGE_OFFSET = value;
 }
 
 
-unsigned int settings_getAdcCurrentOffset() {
+uint16_t settings_getAdcCurrentOffset() {
     return EEPROM_ADC_CURRENT_OFFSET;
 }
 
-void settings_setAdcCurrentOffset(unsigned int value) {
+void settings_setAdcCurrentOffset(uint16_t value) {
     EEPROM_ADC_CURRENT_OFFSET = value;
 }

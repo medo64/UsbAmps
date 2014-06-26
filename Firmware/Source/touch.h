@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 
+
 void touch_init();
 
 bool touch_outer_pressed();
