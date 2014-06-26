@@ -133,8 +133,9 @@ void main() {
                 if (counter > SETTINGS_LONG_PRESS_MULTIPLIER) {
                     counter = 0;
                     switch (buttons) {
-                        case BUTTON_OUTER: //nothing
-                            lcd_clear();
+                        case BUTTON_OUTER: //long press on outer - backlight
+                            lcd_writeUnitAndType(unitIndex, typeIndex);
+                            io_backlight_toggle();
                             break;
                         case BUTTON_INNER: //long press on inner - reset values
                             lcd_writeStatsReset();
