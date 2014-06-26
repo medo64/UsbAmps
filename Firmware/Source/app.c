@@ -3,28 +3,37 @@
 #include <stdint.h>
 #include "calibrate.h"
 #include "config.h"
+#include "io.h"
 #include "lcd.h"
 #include "measure.h"
-#include "touch.h"
-#include "settings.h"
-#include "io.h"
-#include "timer1.h"
 #include "option.h"
+#include "settings.h"
+#include "timer1.h"
+#include "touch.h"
 
 
 #define BUTTON_OUTER  0x01
 #define BUTTON_INNER  0x02
+
+#define CAPACITY_HISTORY  10
+#if ((60 % CAPACITY_HISTORY) != 0) || (CAPACITY_HISTORY > 30)
+    #error Capacity history has to be subset of 60 seconds.
+#endif
+
 
 void measure();
 void resetStats();
 void showMeasurement(uint8_t unitIndex, uint8_t typeIndex);
 uint8_t getButtonMask();
 
+
 uint16_t AvgCurrent  = INT16_MAX, MinCurrent  = INT16_MAX, MaxCurrent  = INT16_MAX;
 uint16_t AvgVoltage  = INT16_MAX, MinVoltage  = INT16_MAX, MaxVoltage  = INT16_MAX;
 uint16_t AvgPower    = INT16_MAX, MinPower    = INT16_MAX, MaxPower    = INT16_MAX;
 
-uint32_t TotCapacity = 0;
+uint16_t AvgCapacitySum = 0;
+uint8_t  AvgCapacityCount = 0;
+uint32_t TotalCapacitySum = 0;
 
 
 void main() {
@@ -100,7 +109,11 @@ void main() {
     uint8_t phaseCounter = 0;
 
 
+    //capacity
     timer1_init();
+    uint16_t CapacityPerSecond[CAPACITY_HISTORY] = { 0 };
+    uint8_t CapacityPerSecondIndex = 0;
+
 
     while (true) {
         phaseCounter = (phaseCounter + 1) % SETTINGS_LONG_BLINK_MULTIPLIER;
@@ -124,7 +137,7 @@ void main() {
                         if (unitIndex != OPTION_UNIT_CAPACITY) {
                             lcd_writeUnitAndType(unitIndex, (typeIndex + 1) % 3); break; //avg/max/min
                         } else {
-                            lcd_writeUnitAndType(unitIndex, typeIndex); break; //total
+                            lcd_writeUnitAndType(unitIndex, (typeIndex + 1) % 2); break; //last10s/total
                         }
                 }
 
@@ -158,11 +171,11 @@ void main() {
                     unitIndex = (unitIndex + 1) % OPTION_COUNT;
                     typeIndex = 0;
                     break;
-                case BUTTON_INNER: //avg/max/min
+                case BUTTON_INNER:
                     if (unitIndex != OPTION_UNIT_CAPACITY) {
-                        typeIndex = (typeIndex + 1) % 3;
+                        typeIndex = (typeIndex + 1) % 3; //avg/max/min
                     } else {
-                        typeIndex = 0;
+                        typeIndex = (typeIndex + 1) % 2; //last10s/total
                     }
                     break;
             }
@@ -170,11 +183,16 @@ void main() {
         } else if (timer1_hasSecondPassed()) { //has one second passed
 
             if (AvgCurrent < INT16_MAX) {
-                TotCapacity += AvgCurrent;
+                TotalCapacitySum += AvgCurrent;
+                AvgCapacitySum += AvgCurrent;
+                CapacityPerSecondIndex = (CapacityPerSecondIndex + 1) % CAPACITY_HISTORY;
+                AvgCapacitySum -= CapacityPerSecond[CapacityPerSecondIndex];
+                CapacityPerSecond[CapacityPerSecondIndex] = AvgCurrent;
+                if (AvgCapacityCount < CAPACITY_HISTORY) { AvgCapacityCount++; }
             }
 
         } else { //display the value
-            if (SETTINGS_BLINK_ON_MIN_MAX && (typeIndex != 0) && (phaseCounter == 0) && (unitIndex != 4)) { //if not current measurement, blink occasionally (except on capacity)
+            if (SETTINGS_BLINK_ON_MIN_MAX && (typeIndex != 0) && (phaseCounter == 0)) { //if not current measurement, blink occasionally (except on capacity)
                 lcd_clear();
             } else {
                 showMeasurement(unitIndex, typeIndex);
@@ -229,28 +247,33 @@ void measure() {
 }
 
 void resetStats() {
-    MinCurrent    = AvgCurrent;
-    MaxCurrent    = AvgCurrent;
-    MinVoltage    = AvgVoltage;
-    MaxVoltage    = AvgVoltage;
-    MinPower      = AvgPower;
-    MaxPower      = AvgPower;
-    TotCapacity = 0;
+    MinCurrent       = AvgCurrent;
+    MaxCurrent       = AvgCurrent;
+    MinVoltage       = AvgVoltage;
+    MaxVoltage       = AvgVoltage;
+    MinPower         = AvgPower;
+    MaxPower         = AvgPower;
+    TotalCapacitySum = 0;
 }
 
 void showMeasurement(uint8_t unitIndex, uint8_t typeIndex) {
     switch (unitIndex * 3 + typeIndex) {
-        case OPTION_UNITTYPE_CURRENT_AVG:  lcd_writeMilliValue(AvgCurrent); break;
-        case OPTION_UNITTYPE_CURRENT_MAX:  lcd_writeMilliValue(MaxCurrent); break;
-        case OPTION_UNITTYPE_CURRENT_MIN:  lcd_writeMilliValue(MinCurrent); break;
-        case OPTION_UNITTYPE_VOLTAGE_AVG:  lcd_writeValue(AvgVoltage); break;
-        case OPTION_UNITTYPE_VOLTAGE_MAX:  lcd_writeValue(MaxVoltage); break;
-        case OPTION_UNITTYPE_VOLTAGE_MIN:  lcd_writeValue(MinVoltage); break;
-        case OPTION_UNITTYPE_POWER_AVG:    lcd_writeValue(AvgPower); break;
-        case OPTION_UNITTYPE_POWER_MAX:    lcd_writeValue(MaxPower); break;
-        case OPTION_UNITTYPE_POWER_MIN:    lcd_writeValue(MinPower); break;
-        case OPTION_UNITTYPE_CAPACITY_TOT: lcd_writeMilliValue((uint16_t)(TotCapacity / 3600)); break;
-        case OPTION_UNITTYPE_CAPACITY_NA1: break;
-        case OPTION_UNITTYPE_CAPACITY_NA2: break;
+        case OPTION_UNITTYPE_CURRENT_AVG:     lcd_writeMilliValue(AvgCurrent); break;
+        case OPTION_UNITTYPE_CURRENT_MAX:     lcd_writeMilliValue(MaxCurrent); break;
+        case OPTION_UNITTYPE_CURRENT_MIN:     lcd_writeMilliValue(MinCurrent); break;
+        case OPTION_UNITTYPE_VOLTAGE_AVG:     lcd_writeValue(AvgVoltage); break;
+        case OPTION_UNITTYPE_VOLTAGE_MAX:     lcd_writeValue(MaxVoltage); break;
+        case OPTION_UNITTYPE_VOLTAGE_MIN:     lcd_writeValue(MinVoltage); break;
+        case OPTION_UNITTYPE_POWER_AVG:       lcd_writeValue(AvgPower); break;
+        case OPTION_UNITTYPE_POWER_MAX:       lcd_writeValue(MaxPower); break;
+        case OPTION_UNITTYPE_POWER_MIN:       lcd_writeValue(MinPower); break;
+        case OPTION_UNITTYPE_CAPACITY_MINUTE:
+            if (AvgCapacityCount < CAPACITY_HISTORY) {
+                lcd_writeNoValue();
+            } else {
+                lcd_writeMilliValue((uint16_t)(AvgCapacitySum / CAPACITY_HISTORY));
+            }
+            break;
+        case OPTION_UNITTYPE_CAPACITY_HOUR:   lcd_writeMilliValue((uint16_t)(TotalCapacitySum / 3600)); break;
     }
 }

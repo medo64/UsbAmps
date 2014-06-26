@@ -2,6 +2,7 @@
 #define SETTINGS_H
 
 
+#include <stdbool.h>
 #include <stdint.h>
 
 
