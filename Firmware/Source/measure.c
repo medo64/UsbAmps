@@ -67,9 +67,9 @@ uint16_t getVoltage_1m(uint8_t channel) {
     uint16_t adc = getRawAdc(channel);
     if (adc < ADC_MAX) {
         if (adc <= AdcVoltageOffset) { adc = 0; } else { adc = adc - AdcVoltageOffset; }
-        uint32_t value = (uint32_t)adc * VREF * VOLTAGE_RATIO / ADC_MAX / 100L;
-        uint32_t errorValue = value * VOLTAGE_ERROR_SCALE / 1000L / 100L;
-        uint32_t newValue = value + errorValue;
+        int32_t value = (int32_t)adc * VREF * VOLTAGE_RATIO / ADC_MAX / 100L;
+        int32_t errorValue = value * VOLTAGE_ERROR_SCALE / 1000L / 100L;
+        int32_t newValue = value + errorValue;
         if (newValue < 0) { newValue = 0; }
         return (uint16_t)newValue;
     } else {

@@ -24,7 +24,7 @@ uint16_t AvgCurrent  = INT16_MAX, MinCurrent  = INT16_MAX, MaxCurrent  = INT16_M
 uint16_t AvgVoltage  = INT16_MAX, MinVoltage  = INT16_MAX, MaxVoltage  = INT16_MAX;
 uint16_t AvgPower    = INT16_MAX, MinPower    = INT16_MAX, MaxPower    = INT16_MAX;
 
-uint32_t TotalCapacity = 0;
+uint32_t TotCapacity = 0;
 
 
 void main() {
@@ -120,7 +120,12 @@ void main() {
                 buttons |= nextButtons;
                 switch (buttons) {
                     case BUTTON_OUTER: lcd_writeUnitAndType((unitIndex + 1) % OPTION_COUNT, 0); break; //current/vout/powerout/capacity
-                    case BUTTON_INNER: lcd_writeUnitAndType(unitIndex, (typeIndex + 1) % 3); break; //avg/max/min
+                    case BUTTON_INNER:
+                        if (unitIndex != OPTION_UNIT_CAPACITY) {
+                            lcd_writeUnitAndType(unitIndex, (typeIndex + 1) % 3); break; //avg/max/min
+                        } else {
+                            lcd_writeUnitAndType(unitIndex, typeIndex); break; //total
+                        }
                 }
 
                 //detect long key press
@@ -153,14 +158,18 @@ void main() {
                     typeIndex = 0;
                     break;
                 case BUTTON_INNER: //avg/max/min
-                    typeIndex = (typeIndex + 1) % 3;
+                    if (unitIndex != OPTION_UNIT_CAPACITY) {
+                        typeIndex = (typeIndex + 1) % 3;
+                    } else {
+                        typeIndex = 0;
+                    }
                     break;
             }
 
         } else if (timer1_hasSecondPassed()) { //has one second passed
 
             if (AvgCurrent < INT16_MAX) {
-                TotalCapacity += AvgCurrent;
+                TotCapacity += AvgCurrent;
             }
 
         } else { //display the value
@@ -225,30 +234,22 @@ void resetStats() {
     MaxVoltage    = AvgVoltage;
     MinPower      = AvgPower;
     MaxPower      = AvgPower;
-#if SETTINGS_SHOW_CAPACITY
-    TotalCapacity = 0;
-#endif
+    TotCapacity = 0;
 }
 
 void showMeasurement(uint8_t unitIndex, uint8_t typeIndex) {
     switch (unitIndex * 3 + typeIndex) {
-        case 0: lcd_writeMilliValue(AvgCurrent); break;
-        case 1: lcd_writeMilliValue(MaxCurrent); break;
-        case 2: lcd_writeMilliValue(MinCurrent); break;
-        case 3: lcd_writeValue(AvgVoltage); break;
-        case 4: lcd_writeValue(MaxVoltage); break;
-        case 5: lcd_writeValue(MinVoltage); break;
-        case 6: lcd_writeValue(AvgPower); break;
-        case 7: lcd_writeValue(MaxPower); break;
-        case 8: lcd_writeValue(MinPower); break;
-#if SETTINGS_SHOW_CAPACITY
-        case 9:
-        case 10:
-        case 11: { //capacity
-            uint16_t capacityInmAh = (uint16_t)(TotalCapacity / 3600);
-            lcd_writeMilliValue(capacityInmAh);
-            break;
-        }
-#endif
+        case OPTION_UNITTYPE_CURRENT_AVG:  lcd_writeMilliValue(AvgCurrent); break;
+        case OPTION_UNITTYPE_CURRENT_MAX:  lcd_writeMilliValue(MaxCurrent); break;
+        case OPTION_UNITTYPE_CURRENT_MIN:  lcd_writeMilliValue(MinCurrent); break;
+        case OPTION_UNITTYPE_VOLTAGE_AVG:  lcd_writeValue(AvgVoltage); break;
+        case OPTION_UNITTYPE_VOLTAGE_MAX:  lcd_writeValue(MaxVoltage); break;
+        case OPTION_UNITTYPE_VOLTAGE_MIN:  lcd_writeValue(MinVoltage); break;
+        case OPTION_UNITTYPE_POWER_AVG:    lcd_writeValue(AvgPower); break;
+        case OPTION_UNITTYPE_POWER_MAX:    lcd_writeValue(MaxPower); break;
+        case OPTION_UNITTYPE_POWER_MIN:    lcd_writeValue(MinPower); break;
+        case OPTION_UNITTYPE_CAPACITY_TOT: lcd_writeMilliValue((uint16_t)(TotCapacity / 3600)); break;
+        case OPTION_UNITTYPE_CAPACITY_NA1: break;
+        case OPTION_UNITTYPE_CAPACITY_NA2: break;
     }
 }
