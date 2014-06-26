@@ -26,6 +26,9 @@
 /* Defines whether display will occasionally blink when non-actual value (i.e.
  * min/max) is shown. Default value is true. */
 
+#define SETTINGS_SHOW_CAPACITY  true
+/* Defines whether capacity is shown as fourth measurement option. */
+
 
 unsigned int settings_getAdcVoltageOffset();
 void settings_setAdcVoltageOffset(unsigned int value);

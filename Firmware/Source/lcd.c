@@ -1,6 +1,7 @@
 #include <limits.h>
 #include <pic.h>
 #include <stdbool.h>
+#include "option.h"
 #include "settings.h"
 
 
@@ -57,6 +58,9 @@ const unsigned char UNITTYPE_SEGMENTS[] = {
                                               0b00010000, 0b00001110, 0b00000010, //-P-: AB  EFG
                                               0b00000000, 0b00010001, 0b00011100, //--P: AB  EFG
                                               0b01001100, 0b00000000, 0b10000001, //P--: AB  EFG
+                                              0b11011010, 0b00011111, 0b11011110, //CAP
+                                              0b11011010, 0b00011111, 0b11011110, //CAP
+                                              0b11011010, 0b00011111, 0b11011110, //CAP
                                           };
 
 const unsigned char CALIBRATION_SEGMENTS[] = { 0b11011010, 0b00111110, 0b11000110 };

@@ -1,6 +1,7 @@
 #include <pic16f1934.h>
 #include <pic.h>
 #include <limits.h>
+#include <stdint.h>
 #include "calibrate.h"
 #include "config.h"
 #include "lcd.h"
@@ -8,6 +9,8 @@
 #include "touch.h"
 #include "settings.h"
 #include "io.h"
+#include "timer1.h"
+#include "option.h"
 
 
 #define BUTTON_OUTER  0x01
@@ -17,6 +20,12 @@ void measure();
 void resetStats();
 void showMeasurement(unsigned char unitIndex, unsigned char typeIndex);
 unsigned char getButtonMask();
+
+unsigned int AvgCurrent  = INT_MAX, MinCurrent  = INT_MAX, MaxCurrent  = INT_MAX;
+unsigned int AvgVoltage  = INT_MAX, MinVoltage  = INT_MAX, MaxVoltage  = INT_MAX;
+unsigned int AvgPower    = INT_MAX, MinPower    = INT_MAX, MaxPower    = INT_MAX;
+
+uint32_t TotalCapacity = 0;
 
 
 void main() {
@@ -91,6 +100,9 @@ void main() {
     unsigned char typeIndex = 0; //0:avg; 1:max; 2:min
     unsigned char phaseCounter = 0;
 
+
+    timer1_init();
+
     while (true) {
         phaseCounter = (phaseCounter + 1) % SETTINGS_LONG_BLINK_MULTIPLIER;
 
@@ -108,7 +120,7 @@ void main() {
                 nextButtons = getButtonMask();
                 buttons |= nextButtons;
                 switch (buttons) {
-                    case BUTTON_OUTER: lcd_writeUnitAndType((unitIndex + 1) % 3, 0); break; //current/vout/powerout
+                    case BUTTON_OUTER: lcd_writeUnitAndType((unitIndex + 1) % OPTION_COUNT, 0); break; //current/vout/powerout/capacity
                     case BUTTON_INNER: lcd_writeUnitAndType(unitIndex, (typeIndex + 1) % 3); break; //avg/max/min
                 }
 
@@ -137,8 +149,8 @@ void main() {
 
             //actual work for short key presses
             switch (buttons) {
-                case BUTTON_OUTER: //current/vout/powerout
-                    unitIndex = (unitIndex + 1) % 3;
+                case BUTTON_OUTER: //current/vout/powerout/capacity
+                    unitIndex = (unitIndex + 1) % OPTION_COUNT;
                     typeIndex = 0;
                     break;
                 case BUTTON_INNER: //avg/max/min
@@ -146,8 +158,14 @@ void main() {
                     break;
             }
 
+        } else if (timer1_hasSecondPassed()) { //has one second passed
+
+            if (AvgCurrent < INT_MAX) {
+                TotalCapacity += AvgCurrent;
+            }
+
         } else { //display the value
-            if (SETTINGS_BLINK_ON_MIN_MAX && (typeIndex != 0) && (phaseCounter == 0)) { //if not current measurement, blink occasionally
+            if (SETTINGS_BLINK_ON_MIN_MAX && (typeIndex != 0) && (phaseCounter == 0) && (unitIndex != 4)) { //if not current measurement, blink occasionally (except on capacity)
                 lcd_clear();
             } else {
                 showMeasurement(unitIndex, typeIndex);
@@ -180,9 +198,6 @@ void processAvg(unsigned long sum, unsigned int count, unsigned int *avg) {
 }
 
 
-unsigned int AvgCurrent = INT_MAX, MinCurrent = INT_MAX, MaxCurrent = INT_MAX;
-unsigned int AvgVoltage = INT_MAX, MinVoltage = INT_MAX, MaxVoltage = INT_MAX;
-unsigned int AvgPower   = INT_MAX, MinPower   = INT_MAX, MaxPower   = INT_MAX;
 
 void measure() {
     clrwdt();
@@ -205,12 +220,15 @@ void measure() {
 }
 
 void resetStats() {
-    MinCurrent = AvgCurrent;
-    MaxCurrent = AvgCurrent;
-    MinVoltage = AvgVoltage;
-    MaxVoltage = AvgVoltage;
-    MinPower   = AvgPower;
-    MaxPower   = AvgPower;
+    MinCurrent    = AvgCurrent;
+    MaxCurrent    = AvgCurrent;
+    MinVoltage    = AvgVoltage;
+    MaxVoltage    = AvgVoltage;
+    MinPower      = AvgPower;
+    MaxPower      = AvgPower;
+#if SETTINGS_SHOW_CAPACITY
+    TotalCapacity = 0;
+#endif
 }
 
 void showMeasurement(unsigned char unitIndex, unsigned char typeIndex) {
@@ -224,5 +242,14 @@ void showMeasurement(unsigned char unitIndex, unsigned char typeIndex) {
         case 6: lcd_writeValue(AvgPower); break;
         case 7: lcd_writeValue(MaxPower); break;
         case 8: lcd_writeValue(MinPower); break;
+#if SETTINGS_SHOW_CAPACITY
+        case 9:
+        case 10:
+        case 11: { //capacity
+            unsigned int capacityInmAh = (unsigned int)(TotalCapacity / 3600);
+            lcd_writeMilliValue(capacityInmAh);
+            break;
+        }
+#endif
     }
 }
