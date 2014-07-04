@@ -216,7 +216,7 @@ void lcd_writeNumber(uint16_t value_1m, bool noMillies) {
         if ((value_1m >= 1000) || noMillies) { //100-9999 mX => 4.20
             writeDigits(d0, d1, d2, 1);
         } else if (value_1m >= 100) { //100-9999 mX => 4.20
-            if (SETTINGS_THREE_DIGIT_MILLIAMPS) {
+            if (OPTION_THREE_DIGIT_MILLIAMPS) {
                 writeDigits(d1, d2, d3, 0);
             } else {
                 writeDigits(d0, d1, d2, 1);

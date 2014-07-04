@@ -116,7 +116,7 @@ void main() {
 
 
     while (true) {
-        phaseCounter = (phaseCounter + 1) % SETTINGS_LONG_BLINK_MULTIPLIER;
+        phaseCounter = (phaseCounter + 1) % OPTION_LONG_BLINK_MULTIPLIER;
 
         measure();
 
@@ -143,7 +143,7 @@ void main() {
 
                 //detect long key press
                 counter += 1;
-                if (counter > SETTINGS_LONG_PRESS_MULTIPLIER) {
+                if (counter > OPTION_LONG_PRESS_MULTIPLIER) {
                     counter = 0;
                     switch (buttons) {
                         case BUTTON_OUTER: //long press on outer - backlight
@@ -192,7 +192,7 @@ void main() {
             }
 
         } else { //display the value
-            if (SETTINGS_BLINK_ON_MIN_MAX && (typeIndex != 0) && (phaseCounter == 0)) { //if not current measurement, blink occasionally (except on capacity)
+            if (OPTION_BLINK_ON_MIN_MAX && (typeIndex != 0) && (phaseCounter == 0)) { //if not current measurement, blink occasionally (except on capacity)
                 lcd_clear();
             } else {
                 showMeasurement(unitIndex, typeIndex);
@@ -230,7 +230,7 @@ void measure() {
     clrwdt();
     uint32_t sumCurrent = 0, sumVoltage = 0, sumPower = 0;
     uint16_t cntCurrent = 0, cntVoltage = 0, cntPower = 0;
-    for (uint8_t i=0; i<SETTINGS_AVERAGE_COUNT; i++) {
+    for (uint8_t i=0; i<OPTION_AVERAGE_COUNT; i++) {
         uint16_t current = measure_getCurrent_1m();
         uint16_t voltage = measure_getVoltageOut_1m();
         uint16_t power   = ((current == INT16_MAX) || (voltage == INT16_MAX)) ? INT16_MAX : (uint16_t)(((uint32_t)current * (uint32_t)voltage) / 1000L);
