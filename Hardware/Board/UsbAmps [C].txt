@@ -9,8 +9,7 @@ N   Part name                        RefDes   DigiKey                  Newark
 1x  P USB A, plug, horizontal        P1       WM17118-ND               01J8375
 1x  R .1, 1%, 1W (2512)              R1       CRA2512-FZ-R100ELFCT-ND  14P5534
 3x  R 1K 1%, 0.125W (0805)           R2-R4    RMCF0805FT1K00CT-ND      01P2109
-2x  R 2.2K 1%, 0.125W (0805)         R5 R6    RMCF0805FT2K20CT-ND      52K9951
-1x  R 10K 1%, 0.125W (0805)          R7       RMCF0805JT10K0CT-ND      05M4535
+3x  R 2.2K 1%, 0.125W (0805)         R5-R7    RMCF0805FT2K20CT-ND      52K9951
 1x  Q MOSFET-N, logic-level (SOT23)  Q1       DMN65D8L-7DICT-ND        12X8739
 1x  U PIC16F1934-I/PT (TQFP-44)      U1       PIC16F1934-I/PT-ND       45P4756
 1x  U ZXCT1009 (SOT23)               U2       ZXCT1009FCT-ND           24M9389
