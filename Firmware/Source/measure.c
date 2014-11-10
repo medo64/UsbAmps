@@ -18,8 +18,8 @@
 uint16_t AdcVoltageOffset;
 uint16_t AdcCurrentOffset;
 
-const int16_t VOLTAGE_ERROR_SCALE =     0; // 0.0%
-const int16_t CURRENT_ERROR_SCALE = -1000; //-1.0%
+const int16_t VOLTAGE_ERROR_SCALE =  -250; //-0.25%
+const int16_t CURRENT_ERROR_SCALE = -1000; //-1.00%
 
 
 void measure_init() {
@@ -63,8 +63,9 @@ uint16_t getRawAdc(uint8_t channel) {
     return ADRES;
 }
 
-uint16_t getVoltage_1m(uint8_t channel) {
-    uint16_t adc = getRawAdc(channel);
+
+uint16_t measure_getVoltage_1m() {
+    uint16_t adc = getRawAdc(ADC_CHANNEL_VOLTAGE_OUT); //measure consuption of a connected device (ADC_CHANNEL_VOLTAGE_OUT), not whole UsbAmps (ADC_CHANNEL_VOLTAGE_IN)
     if (adc < ADC_MAX) {
         if (adc <= AdcVoltageOffset) { adc = 0; } else { adc = adc - AdcVoltageOffset; }
         int32_t value = (int32_t)adc * VREF * VOLTAGE_RATIO / ADC_MAX / 100L;
@@ -75,14 +76,6 @@ uint16_t getVoltage_1m(uint8_t channel) {
     } else {
         return INT16_MAX;
     }
-}
-
-uint16_t measure_getVoltageIn_10u() {
-    return getVoltage_1m(ADC_CHANNEL_VOLTAGE_IN);
-}
-
-uint16_t measure_getVoltageOut_1m() {
-    return getVoltage_1m(ADC_CHANNEL_VOLTAGE_OUT);
 }
 
 uint16_t measure_getCurrent_1m() {

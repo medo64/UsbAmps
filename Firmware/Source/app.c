@@ -238,7 +238,7 @@ void measure() {
     uint16_t cntCurrent = 0, cntVoltage = 0, cntPower = 0;
     for (uint8_t i=0; i<OPTION_AVERAGE_COUNT; i++) {
         uint16_t current = measure_getCurrent_1m();
-        uint16_t voltage = measure_getVoltageOut_1m();
+        uint16_t voltage = measure_getVoltage_1m();
         uint16_t power   = ((current == INT16_MAX) || (voltage == INT16_MAX)) ? INT16_MAX : (uint16_t)(((uint32_t)current * (uint32_t)voltage) / 1000L);
         processMinMax(current, &MinCurrent, &MaxCurrent);
         processMinMax(voltage, &MinVoltage, &MaxVoltage);

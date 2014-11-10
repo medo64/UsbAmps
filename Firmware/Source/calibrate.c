@@ -30,6 +30,7 @@ void calibrate() {
 
     if (newAdcCurrentOffset < UINT16_MAX) {
         settings_setAdcCurrentOffset(newAdcCurrentOffset);
+        settings_setAdcVoltageOffset(newAdcCurrentOffset / 2); //just set voltage to half of current offset
         for (uint8_t i=0; i<6; i++) {
             clrwdt();
             switch (i % 3) {
