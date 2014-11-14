@@ -95,8 +95,8 @@ void main() {
             measure_reinit();
         }
         lcd_writeLoading();
-    } else if (touch_inner_pressed()) { //inner key signifies High power mode
-        lcd_writeHighPower();
+    } else if (touch_outer_pressed()) { //outer key signifies Charging Downstream Port
+        lcd_writeHighPowerLower();
         io_dshort_on();
         if (OPTION_DSHORT_COUNT > 0) {
             for (uint8_t i=0; i<OPTION_DSHORT_COUNT; i++) {
@@ -104,6 +104,9 @@ void main() {
             }
             io_dshort_off();
         }
+    } else if (touch_inner_pressed()) { //inner key signifies Dedicated Charger Port
+        lcd_writeHighPowerUpper();
+        io_dshort_on();
     }
 
 

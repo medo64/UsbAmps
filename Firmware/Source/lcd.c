@@ -62,7 +62,8 @@ const uint8_t UNITTYPE_SEGMENTS[]      = {
 const uint8_t CALIBRATION_SEGMENTS[]   = { 0b11011010, 0b00111110, 0b11000110 }; //CAL [A  DEF ][ABC EFG][   DEF ]
 const uint8_t ERROR_SEGMENTS[]         = { 0b01011100, 0b00011001, 0b11000000 }; //Err [D  DEFG][    E G][    E G]
 const uint8_t LOADING_SEGMENTS[]       = { 0b00000000, 0b00001000, 0b00000000 }; //·-· [       ][      G][       ]
-const uint8_t HIGHPOWER_SEGMENTS[]     = { 0b00011100, 0b00010011, 0b10111101 }; //HIP [ BC EFG][    EF ][AB  EFG]
+const uint8_t HIGHPOWER_L_SEGMENTS[]   = { 0b00011100, 0b00010001, 0b10111100 }; //hiP [  C EFG][    E  ][AB  EFG]
+const uint8_t HIGHPOWER_U_SEGMENTS[]   = { 0b00011100, 0b00010011, 0b10111101 }; //HIP [ BC EFG][    EF ][AB  EFG]
 const uint8_t STATSRESET_SEGMENTS[]    = { 0b00000100, 0b00000001, 0b00000000 }; //-·- [      G][       ][      G]
 const uint8_t OVERLOAD_SEGMENTS[]      = { 0b01011000, 0b10000010, 0b11100001 }; //OL· [ABCDEF ][   DEF ][       ]
 const uint8_t NOVALUE_SEGMENTS[]       = { 0b00000000, 0b00000001, 0b00000000 }; //··- [       ][       ][      G]
@@ -178,10 +179,16 @@ void lcd_writeLoading() {
     LCDDATA2 = LOADING_SEGMENTS[2];
 }
 
-void lcd_writeHighPower() {
-    LCDDATA0 = HIGHPOWER_SEGMENTS[0];
-    LCDDATA1 = HIGHPOWER_SEGMENTS[1];
-    LCDDATA2 = HIGHPOWER_SEGMENTS[2];
+void lcd_writeHighPowerLower() {
+    LCDDATA0 = HIGHPOWER_L_SEGMENTS[0];
+    LCDDATA1 = HIGHPOWER_L_SEGMENTS[1];
+    LCDDATA2 = HIGHPOWER_L_SEGMENTS[2];
+}
+
+void lcd_writeHighPowerUpper() {
+    LCDDATA0 = HIGHPOWER_U_SEGMENTS[0];
+    LCDDATA1 = HIGHPOWER_U_SEGMENTS[1];
+    LCDDATA2 = HIGHPOWER_U_SEGMENTS[2];
 }
 
 void lcd_writeStatsReset() {
