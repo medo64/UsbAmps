@@ -1,5 +1,4 @@
 #include <pic16f1934.h>
-#include <pic.h>
 #include <stdint.h>
 #include "calibrate.h"
 #include "config.h"
@@ -47,10 +46,10 @@ void main() {
 
 
     //initial calibration
-    if (settings_getAdcCurrentOffset() == UINT16_MAX) { //on first run you are still connected to PICkit; just wait
+    if (settings_getAdcCurrentOffset() == UINT8_MAX) { //on first run you are still connected to PICkit; just wait
         clrwdt();
         wait_250ms(); //we ignore short power-up/down events
-        settings_setAdcCurrentOffset(UINT16_MAX-1);
+        settings_setAdcCurrentOffset(UINT8_MAX-1);
         while(true) {
             clrwdt();
             lcd_writeAll();
@@ -59,7 +58,7 @@ void main() {
             lcd_clear();
             wait_250ms();
         }
-    } else if (settings_getAdcCurrentOffset() == UINT16_MAX-1) { //on first real run do calibration
+    } else if (settings_getAdcCurrentOffset() == UINT8_MAX-1) { //on first real run do calibration
         lcd_writeCalibration();
         wait_250ms();
         calibrate();

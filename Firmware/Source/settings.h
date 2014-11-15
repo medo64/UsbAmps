@@ -6,10 +6,10 @@
 #include <stdint.h>
 
 
-uint16_t settings_getAdcVoltageOffset();
-void settings_setAdcVoltageOffset(uint16_t value);
+uint8_t settings_getAdcVoltageOffset();
+void settings_setAdcVoltageOffset(uint8_t value);
 
-uint16_t settings_getAdcCurrentOffset();
-void settings_setAdcCurrentOffset(uint16_t value);
+uint8_t settings_getAdcCurrentOffset();
+void settings_setAdcCurrentOffset(uint8_t value);
 
 #endif

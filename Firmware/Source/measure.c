@@ -18,8 +18,8 @@
 uint16_t AdcVoltageOffset;
 uint16_t AdcCurrentOffset;
 
-const int16_t VOLTAGE_ERROR_SCALE =  -250; //-0.25%
-const int16_t CURRENT_ERROR_SCALE = -1000; //-1.00%
+#define VOLTAGE_ERROR_SCALE   -250 //-0.25%
+#define CURRENT_ERROR_SCALE  -1000 //-1.00%
 
 
 void measure_init() {
@@ -54,20 +54,20 @@ void measure_reinit() {
 }
 
 
-uint16_t getRawAdc(uint8_t channel) {
+uint16_t getRawAdc(uint8_t channel, uint8_t offset) {
     ADCON0 = (channel << 2) | 0x01; //Analog Channel Select bits / leave ADON
     __delay_us(10); //to discharge holding cap if there was measurement just before (at least 10us)
     ADGO = 1; //Setting this bit starts an A/D conversion cycle.
     while(ADGO); //A/D conversion cycle in progress.
     ADON = 0; //ADC is disabled and consumes no operating current
-    return ADRES;
+    uint16_t adc = ADRES;
+    if (adc <= offset) { return 0; } else { return adc - offset; }
 }
 
 
 uint16_t measure_getVoltage_1m() {
-    uint16_t adc = getRawAdc(ADC_CHANNEL_VOLTAGE_OUT); //measure consuption of a connected device (ADC_CHANNEL_VOLTAGE_OUT), not whole UsbAmps (ADC_CHANNEL_VOLTAGE_IN)
+    uint16_t adc = getRawAdc(ADC_CHANNEL_VOLTAGE_OUT, AdcVoltageOffset); //measure consuption of a connected device (ADC_CHANNEL_VOLTAGE_OUT), not whole UsbAmps (ADC_CHANNEL_VOLTAGE_IN)
     if (adc < ADC_MAX) {
-        if (adc <= AdcVoltageOffset) { adc = 0; } else { adc = adc - AdcVoltageOffset; }
         int32_t value = (int32_t)adc * VREF * VOLTAGE_RATIO / ADC_MAX / 100L;
         int32_t errorValue = value * VOLTAGE_ERROR_SCALE / 1000L / 100L;
         int32_t newValue = value + errorValue;
@@ -79,9 +79,8 @@ uint16_t measure_getVoltage_1m() {
 }
 
 uint16_t measure_getCurrent_1m() {
-    uint16_t adc = getRawAdc(ADC_CHANNEL_CURRENT);
+    uint16_t adc = getRawAdc(ADC_CHANNEL_CURRENT, AdcCurrentOffset);
     if (adc < ADC_MAX) {
-        if (adc <= AdcCurrentOffset) { adc = 0; } else { adc = adc - AdcCurrentOffset; }
         int32_t value = (int32_t)adc * VREF * CURRENT_RATIO / ADC_MAX / 100L;
         int32_t errorValue = value * CURRENT_ERROR_SCALE / 1000L / 100L;
         int32_t newValue = value + errorValue;
@@ -94,5 +93,5 @@ uint16_t measure_getCurrent_1m() {
 
 
 uint16_t measure_getRawCurrent() {
-    return getRawAdc(ADC_CHANNEL_CURRENT);
+    return getRawAdc(ADC_CHANNEL_CURRENT, 0);
 }

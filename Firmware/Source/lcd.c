@@ -8,7 +8,7 @@
 //LCDDATA1:  D2 DP2  D3  E3  G2  A2  F2  G3
 //LCDDATA2:  E1  D1  C1  B3  A3  F3  B2  B1
 
-const uint8_t DIGIT_SEGMENTS[]         = {
+const uint8_t DIGIT_SEGMENTS_D1[]      = {
                                            0b01001000, 0b00000000, 0b11100001, //D1: 0 [ABCDEF ]
                                            0b00000000, 0b00000000, 0b00100001, //D1: 1 [ BC    ]
                                            0b01000100, 0b00000000, 0b11000001, //D1: 2 [AB DE G]
@@ -19,7 +19,8 @@ const uint8_t DIGIT_SEGMENTS[]         = {
                                            0b01000000, 0b00000000, 0b00100001, //D1: 7 [ABC    ]
                                            0b01001100, 0b00000000, 0b11100001, //D1: 8 [ABCDEFG]
                                            0b01001100, 0b00000000, 0b01100001, //D1: 9 [ABCD FG]
-
+                                         };
+const uint8_t DIGIT_SEGMENTS_D2[]      = {
                                            0b10010000, 0b10000110, 0b00000010, //D2: 0 [ABCDEF ]
                                            0b10000000, 0b00000000, 0b00000010, //D2: 1 [ BC    ]
                                            0b00010000, 0b10001100, 0b00000010, //D2: 2 [AB DE G]
@@ -30,7 +31,8 @@ const uint8_t DIGIT_SEGMENTS[]         = {
                                            0b10000000, 0b00000100, 0b00000010, //D2: 7 [ABC    ]
                                            0b10010000, 0b10001110, 0b00000010, //D2: 8 [ABCDEFG]
                                            0b10000000, 0b10001110, 0b00000010, //D2: 9 [ABCD FG]
-
+                                         };
+const uint8_t DIGIT_SEGMENTS_D3[]      = {
                                            0b00000001, 0b00110000, 0b00011100, //D3: 0 [ABCDEF ]
                                            0b00000001, 0b00000000, 0b00010000, //D3: 1 [ BC    ]
                                            0b00000000, 0b00110001, 0b00011000, //D3: 2 [AB DE G]
@@ -62,8 +64,8 @@ const uint8_t UNITTYPE_SEGMENTS[]      = {
 const uint8_t CALIBRATION_SEGMENTS[]   = { 0b11011010, 0b00111110, 0b11000110 }; //CAL [A  DEF ][ABC EFG][   DEF ]
 const uint8_t ERROR_SEGMENTS[]         = { 0b01011100, 0b00011001, 0b11000000 }; //Err [D  DEFG][    E G][    E G]
 const uint8_t LOADING_SEGMENTS[]       = { 0b00000000, 0b00001000, 0b00000000 }; //·-· [       ][      G][       ]
-const uint8_t HIGHPOWER_L_SEGMENTS[]   = { 0b00011100, 0b00010001, 0b10111100 }; //hiP [  C EFG][    E  ][AB  EFG]
-const uint8_t HIGHPOWER_U_SEGMENTS[]   = { 0b00011100, 0b00010011, 0b10111101 }; //HIP [ BC EFG][    EF ][AB  EFG]
+const uint8_t HIGHPOWER_CDP_SEGMENTS[] = { 0b00011100, 0b00010001, 0b10111100 }; //hiP [  C EFG][    E  ][AB  EFG]
+const uint8_t HIGHPOWER_DCP_SEGMENTS[] = { 0b00011100, 0b00010011, 0b10111101 }; //HIP [ BC EFG][    EF ][AB  EFG]
 const uint8_t STATSRESET_SEGMENTS[]    = { 0b00000100, 0b00000001, 0b00000000 }; //-·- [      G][       ][      G]
 const uint8_t OVERLOAD_SEGMENTS[]      = { 0b01011000, 0b10000010, 0b11100001 }; //OL· [ABCDEF ][   DEF ][       ]
 const uint8_t NOVALUE_SEGMENTS[]       = { 0b00000000, 0b00000001, 0b00000000 }; //··- [       ][       ][      G]
@@ -123,24 +125,24 @@ void writeDigits(uint8_t digit1, uint8_t digit2, uint8_t digit3, bool includeDec
     uint8_t segments2 = 0;
 
     if (digit1 < 10) {
-        uint8_t index1 = 0 + digit1 * 3;
-        segments0 = segments0 | DIGIT_SEGMENTS[index1 + 0];
-        segments1 = segments1 | DIGIT_SEGMENTS[index1 + 1];
-        segments2 = segments2 | DIGIT_SEGMENTS[index1 + 2];
+        uint8_t index1 = digit1 * 3;
+        segments0 = segments0 | DIGIT_SEGMENTS_D1[index1 + 0];
+        segments1 = segments1 | DIGIT_SEGMENTS_D1[index1 + 1];
+        segments2 = segments2 | DIGIT_SEGMENTS_D1[index1 + 2];
     }
 
     if (digit2 < 10) {
-        uint8_t index2 = 30 + digit2 * 3;
-        segments0 = segments0 | DIGIT_SEGMENTS[index2 + 0];
-        segments1 = segments1 | DIGIT_SEGMENTS[index2 + 1];
-        segments2 = segments2 | DIGIT_SEGMENTS[index2 + 2];
+        uint8_t index2 = digit2 * 3;
+        segments0 = segments0 | DIGIT_SEGMENTS_D2[index2 + 0];
+        segments1 = segments1 | DIGIT_SEGMENTS_D2[index2 + 1];
+        segments2 = segments2 | DIGIT_SEGMENTS_D2[index2 + 2];
     }
 
     if (digit3 < 10) {
-        uint8_t index3 = 60 + digit3 * 3;
-        segments0 = segments0 | DIGIT_SEGMENTS[index3 + 0];
-        segments1 = segments1 | DIGIT_SEGMENTS[index3 + 1];
-        segments2 = segments2 | DIGIT_SEGMENTS[index3 + 2];
+        uint8_t index3 = digit3 * 3;
+        segments0 = segments0 | DIGIT_SEGMENTS_D3[index3 + 0];
+        segments1 = segments1 | DIGIT_SEGMENTS_D3[index3 + 1];
+        segments2 = segments2 | DIGIT_SEGMENTS_D3[index3 + 2];
     }
 
     if (includeDecimalPoint) {
@@ -180,15 +182,15 @@ void lcd_writeLoading() {
 }
 
 void lcd_writeHighPowerLower() {
-    LCDDATA0 = HIGHPOWER_L_SEGMENTS[0];
-    LCDDATA1 = HIGHPOWER_L_SEGMENTS[1];
-    LCDDATA2 = HIGHPOWER_L_SEGMENTS[2];
+    LCDDATA0 = HIGHPOWER_CDP_SEGMENTS[0];
+    LCDDATA1 = HIGHPOWER_CDP_SEGMENTS[1];
+    LCDDATA2 = HIGHPOWER_CDP_SEGMENTS[2];
 }
 
 void lcd_writeHighPowerUpper() {
-    LCDDATA0 = HIGHPOWER_U_SEGMENTS[0];
-    LCDDATA1 = HIGHPOWER_U_SEGMENTS[1];
-    LCDDATA2 = HIGHPOWER_U_SEGMENTS[2];
+    LCDDATA0 = HIGHPOWER_DCP_SEGMENTS[0];
+    LCDDATA1 = HIGHPOWER_DCP_SEGMENTS[1];
+    LCDDATA2 = HIGHPOWER_DCP_SEGMENTS[2];
 }
 
 void lcd_writeStatsReset() {
