@@ -58,14 +58,13 @@ const uint8_t UNITTYPE_SEGMENTS[]      = {
                                            0b01001100, 0b00000000, 0b10000001, //P·· [AB  EFG][       ][       ]
                                            0b00010000, 0b10000110, 0b00000000, //·C· [       ][A  DEF ][       ]
                                            0b00000000, 0b00110000, 0b00001100, //··C [       ][       ][A  DEF ]
-//                                           0b00000000, 0b00000000, 0b00000000, //··· [       ][       ][       ]
                                          };
 
 const uint8_t CALIBRATION_SEGMENTS[]   = { 0b11011010, 0b00111110, 0b11000110 }; //CAL [A  DEF ][ABC EFG][   DEF ]
 const uint8_t ERROR_SEGMENTS[]         = { 0b01011100, 0b00011001, 0b11000000 }; //Err [D  DEFG][    E G][    E G]
 const uint8_t LOADING_SEGMENTS[]       = { 0b00000000, 0b00001000, 0b00000000 }; //·-· [       ][      G][       ]
-const uint8_t HIGHPOWER_CDP_SEGMENTS[] = { 0b00011100, 0b00010001, 0b10111100 }; //hiP [  C EFG][    E  ][AB  EFG]
-const uint8_t HIGHPOWER_DCP_SEGMENTS[] = { 0b00011100, 0b00010011, 0b10111101 }; //HIP [ BC EFG][    EF ][AB  EFG]
+const uint8_t HIGHPOWER_CDP_SEGMENTS[] = { 0b11011000, 0b10011001, 0b11011110 }; //CdP [A  DEF ][ BCDE G][AB  EFG]
+const uint8_t HIGHPOWER_DCP_SEGMENTS[] = { 0b00010100, 0b10010111, 0b11111101 }; //dCP [ BCDE G][A  DEF ][AB  EFG]
 const uint8_t STATSRESET_SEGMENTS[]    = { 0b00000100, 0b00000001, 0b00000000 }; //-·- [      G][       ][      G]
 const uint8_t OVERLOAD_SEGMENTS[]      = { 0b01011000, 0b10000010, 0b11100001 }; //OL· [ABCDEF ][   DEF ][       ]
 const uint8_t NOVALUE_SEGMENTS[]       = { 0b00000000, 0b00000001, 0b00000000 }; //··- [       ][       ][      G]
