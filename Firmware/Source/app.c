@@ -95,16 +95,14 @@ void main() {
         }
         lcd_writeLoading();
     } else if (touch_outer_pressed()) { //outer key signifies Charging Downstream Port
-        lcd_writeHighPowerLower();
+        lcd_writeHighPower();
         io_dshort_on();
-        if (OPTION_DSHORT_COUNT > 0) {
-            for (uint8_t i=0; i<OPTION_DSHORT_COUNT; i++) {
-                wait_10ms();
-            }
-            io_dshort_off();
+        for (uint8_t i=0; i<OPTION_DSHORT_CDP_COUNT; i++) {
+            wait_10ms();
         }
+        lcd_writeLoading(); //clean the screen immediatelly
     } else if (touch_inner_pressed()) { //inner key signifies Dedicated Charger Port
-        lcd_writeHighPowerUpper();
+        lcd_writeHighPower();
         io_dshort_on();
     }
 

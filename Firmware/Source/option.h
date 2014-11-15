@@ -32,11 +32,10 @@
 #define OPTION_SHOW_CAPACITY  false
 /* Defines whether capacity is shown as fourth measurement option. */
 
-#define OPTION_DSHORT_COUNT  12
-/* Defines the duration of the data lines short circuit during the Hi-power mode
- * in tens of milliseconds. Proper value will negotiate Charging Downstream Port
- * functionality (1.5A and data). Value of 0 means short will be permanent thus
- * defining Dedicated Charger Port (1.5A, no data). */
+#define OPTION_DSHORT_CDP_COUNT  12
+/* Defines the duration of the data lines short circuit in tens of milliseconds
+ * during the Charging Downstream Port Hi-power mode turn up. Proper value will
+ * negotiate Charging Downstream Port functionality (1.5A and data). */
 
 
 
