@@ -152,13 +152,13 @@ void main() {
                 if (counter > OPTION_LONG_PRESS_MULTIPLIER) {
                     counter = 0;
                     switch (buttons) {
-                        case BUTTON_OUTER: //long press on outer - backlight
-                            lcd_writeUnitAndType(unitIndex, typeIndex);
-                            io_backlight_toggle();
-                            break;
-                        case BUTTON_INNER: //long press on inner - reset values
+                        case BUTTON_OUTER: //long press on outer - reset values
                             lcd_writeStatsReset();
                             resetStats();
+                            break;
+                        case BUTTON_INNER: //long press on inner - backlight
+                            lcd_writeUnitAndType(unitIndex, typeIndex);
+                            io_backlight_toggle();
                             break;
                         default: //any other key (e.g. both)
                             lcd_writeUnitAndType(unitIndex, typeIndex);
