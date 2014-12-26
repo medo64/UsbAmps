@@ -21,3 +21,15 @@ Parts
 |  1 | Q MOSFET-N, logic-level (SOT23)  | Q1      | DMN65D8L-7DICT-ND          |                            |
 |  1 | U PIC16F1934-I/PT (TQFP-44)      | U1      | PIC16F1934-I/PT-ND         |                            |
 |  1 | U ZXCT1009 (SOT23)               | U2      | ZXCT1009FCT-ND             |                            |
+
+
+Boards
+------
+
+There are two board versions: Left and Right. Left version is intended for USB
+located on the left side of laptop. Likewise Right version is intended for USB
+located on the right side. Only difference is in the display orientation. All
+other properties are identical.
+
+Board version is denoted in second letter of board code; e.g. board named
+CL1452 would be Left version while CR1452 would be Right version.
