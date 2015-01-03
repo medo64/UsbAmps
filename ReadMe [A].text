@@ -28,7 +28,7 @@ Specifications
 
 | Input ratings             |
 |---------|-----------------|
-| Voltage | 5 ±10% V        |
+| Voltage | 5 Â±10% V        |
 | Current | 10 mA (typical) |
 
 | Output ratings                       |
@@ -57,9 +57,9 @@ shown with resolution of 10 mA/mV/mW (e.g. 5.10 V).
 |:--------------:|:----------:|:--------:|
 | 0 - 99 mA      | 1 mA       | 1% + 12  |
 | 0.10 - 2.00 A  | 0.01 A     | 1% + 8   |
-| 5.00 ±10% V    | 0.01 V     | 1% + 1   |
+| 5.00 Â±10% V    | 0.01 V     | 1% + 1   |
 
-Accuracy is given as ±(percent of reading + [counts](http://www.youtube.com/watch?v=U4JFeU-o2kc)
+Accuracy is given as Â±(percent of reading + [counts](http://www.youtube.com/watch?v=U4JFeU-o2kc)
 of least significant digit).
 
 Due to averaging, it will usually do better than this, but don't count on it as
