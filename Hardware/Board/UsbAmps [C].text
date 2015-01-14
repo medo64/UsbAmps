@@ -7,7 +7,7 @@ UsbAmps
 Parts
 -----
 
-|  # | Part name                        | RefDes  | DigiKey                    | Alternates                 |
+|  # | Part name                        | RefDes  | DigiKey                    | DigiKey (alternative)      |
 |---:|----------------------------------|---------|----------------------------|----------------------------|
 |  3 | C 100nF, X7R (0805)              | C1-C3   | 399-1170-1-ND              |                            |
 |  1 | DS LCD 3 digits (LCD-S301C31TF)  | DS1     | 67-1799-ND                 |                            |
@@ -21,6 +21,16 @@ Parts
 |  1 | Q MOSFET-N, logic-level (SOT23)  | Q1      | DMN65D8L-7DICT-ND          |                            |
 |  1 | U PIC16F1934-I/PT (TQFP-44)      | U1      | PIC16F1934-I/PT-ND         |                            |
 |  1 | U ZXCT1009 (SOT23)               | U2      | ZXCT1009FCT-ND             |                            |
+
+
+### LCD ###
+
+Transflective display is used in UsbAmps in order to allow for backlight. If
+backlight is not required, it is possible to use higher clarity reflective LCD.
+
+| Part name                        | RefDes  | DigiKey                    |
+|----------------------------------|---------|----------------------------|
+| DS LCD 3 digits (LCD-S301C31TR)  | DS1     | 67-1788-ND                 |
 
 
 Boards
