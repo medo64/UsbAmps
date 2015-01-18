@@ -27,7 +27,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.2"
-     inkscape:cx="32.883177"
+     inkscape:cx="54.633177"
      inkscape:cy="32.528019"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -68,11 +68,11 @@
        id="guide2997" />
     <sodipodi:guide
        orientation="1,0"
-       position="7.9724409,0"
+       position="7.0866142,0"
        id="guide2999" />
     <sodipodi:guide
        orientation="1,0"
-       position="91.240157,0"
+       position="92.125984,0"
        id="guide3001" />
     <sodipodi:guide
        orientation="0,1"
@@ -100,8 +100,8 @@
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
         <dc:title>UsbAmps Diffuser</dc:title>
-        <dc:description></dc:description>
-        <dc:identifier></dc:identifier>
+        <dc:description />
+        <dc:identifier />
         <dc:subject>
           <rdf:Bag>
             <rdf:li>A-T-1</rdf:li>
@@ -116,9 +116,9 @@
      id="layer1"
      transform="translate(0,-995.66928)">
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.35433071;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 0,5.5419925e-8 99.212598,0 0,20.374014944580075 -7.972441,0 0,15.944882 7.972441,0 0,20.374016 -99.212598,0 0,-20.374016 7.9724409,0 0,-15.944882 -7.9724409,0 z"
-       id="path3004"
+       style="fill:none;stroke:#000000;stroke-width:0.35433071;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 0,56.692913 99.212598,0 0,-20.374016 -7.086614,0 0,-15.944882 7.086614,0 0,-20.374014944580082 -99.212598,0 L 0,20.374015 l 7.0866142,0 0,15.944882 -7.0866142,0 z"
+       id="path2995"
        inkscape:connector-curvature="0"
        transform="translate(0,995.66928)" />
   </g>
