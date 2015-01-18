@@ -41,8 +41,7 @@ void main() {
     measure_init();
     touch_init();
     io_init();
-
-    lcd_writeLoading();
+    timer1_init();
 
 
     //initial calibration
@@ -107,7 +106,10 @@ void main() {
     }
 
 
-    while (touch_inner_pressed() || touch_outer_pressed()) {  clrwdt(); } //both keys must be released to start
+    while (touch_inner_pressed() || touch_outer_pressed()) { //both keys must be released to start
+        clrwdt();
+        if (!OPTION_STARTUP_WAIT_BUTTON_RELEASE_FOREVER && timer1_hasSecondPassed()) { break; }
+    }
 
 
     uint8_t unitIndex = 0; //0:current; 1:voltage; 2:power
@@ -116,7 +118,6 @@ void main() {
 
 
     //capacity
-    timer1_init();
     uint16_t CapacityPerSecond[CAPACITY_HISTORY] = { 0 };
     uint8_t CapacityPerSecondIndex = 0;
 

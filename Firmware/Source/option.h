@@ -37,6 +37,10 @@
  * during the Charging Downstream Port Hi-power mode turn up. Proper value will
  * negotiate Charging Downstream Port functionality (1.5A and data). */
 
+#define OPTION_STARTUP_WAIT_BUTTON_RELEASE_FOREVER  false
+/* If value is true, UsbAmps will wait forever for button release on startup.
+ * If value is false, UsbAmps will wait for button release or one second,
+ * whichever comes first. */
 
 
 #if OPTION_SHOW_CAPACITY
