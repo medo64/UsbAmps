@@ -71,11 +71,28 @@ LDLIBSOPTIONS=
 # fixDeps replaces a bunch of sed/cat/printf statements that slow down the build
 FIXDEPS=fixDeps
 
+# The following macros may be used in the pre and post step lines
+Device=PIC16F1934
+ProjectDir="Q:\Projects\Electronics\UsbAmps\Firmware\Source"
+ConfName=default
+ImagePath="dist\default\${IMAGE_TYPE}\Source.${IMAGE_TYPE}.${OUTPUT_SUFFIX}"
+ImageDir="dist\default\${IMAGE_TYPE}"
+ImageName="Source.${IMAGE_TYPE}.${OUTPUT_SUFFIX}"
+ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+IsDebug="true"
+else
+IsDebug="false"
+endif
+
 .build-conf:  ${BUILD_SUBPROJECTS}
 ifneq ($(INFORMATION_MESSAGE), )
 	@echo $(INFORMATION_MESSAGE)
 endif
 	${MAKE}  -f nbproject/Makefile-default.mk dist/${CND_CONF}/${IMAGE_TYPE}/Source.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+	@echo "--------------------------------------"
+	@echo "User defined post-build step: [${MKDIR} "../Binaries" && [ "${IMAGE_TYPE}" = "production" ] && ${CP} ${ImagePath} "../Binaries/UsbAmps [$(shell gdate +%F)] (firmware).${OUTPUT_SUFFIX}"]"
+	@${MKDIR} "../Binaries" && [ "${IMAGE_TYPE}" = "production" ] && ${CP} ${ImagePath} "../Binaries/UsbAmps [$(shell gdate +%F)] (firmware).${OUTPUT_SUFFIX}"
+	@echo "--------------------------------------"
 
 MP_PROCESSOR_OPTION=16F1934
 # ------------------------------------------------------------------------------------
