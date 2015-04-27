@@ -44,9 +44,9 @@ support for it.
 
 #### Manufacturing ####
 
-If you want to make this board your self, just grab the latest gerbers (notice
-that there is left-hand and right-hand version) and send it over to [OSH Park](http://oshpark.com/)
-(or any other PCB manufacturer of your choice).
+If you want to make this board your self, just [grab the latest gerbers](http://www.jmedved.com/releases/usbamps/)
+(notice that there is left-hand and right-hand version) and send it over to
+[OSH Park](http://oshpark.com/) (or any other PCB manufacturer of your choice).
 
 Inside the archive you will also find parts list and latest firmware.
 
@@ -152,6 +152,11 @@ this backlight is bad at best. I definitely don't count on it being a feature.
 For all practical purposes there is no backlight for UsbAmps. I am looking at
 small and cheap LDC display with backlight. If anyone knows one, do let me
 know.
+
+
+To improve backlight a bit it is possible to laser cut the diffuser. Clear
+plastic works the best. Beware to export design in EPS format because some
+laser cut services will have issue with SVG.
 
 
 #### Other projects ####
