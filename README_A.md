@@ -1,16 +1,14 @@
-UsbAmps (revision A)
-====================
+### UsbAmps (revision A) ###
 
 UsbAmps is a small USB pass-through device that measures current, voltage and
 power used by whatever is connected on its output.
 
 By default it shows current value but you can also recall minimum and maximum.
 
-![UsbAmps, revision A board](https://www.jmedved.com/content/usbamps_reva.jpg)
+![UsbAmps, revision A board](Wiki/A/Picture.jpg)
 
 
-Usage
------
+#### Usage ####
 
 Two bears are actually touch-sensitive buttons. Upper button determines what
 are you measuring (current, voltage, or power) and lower button determines
@@ -23,20 +21,19 @@ whether you will see current value or minimum/maximum.
 This release also has an (unused) place for physical switch.
 
 
-Specifications
---------------
+#### Specifications ####
 
-| Input ratings             |
+|         | Input ratings   |
 |---------|-----------------|
 | Voltage | 5 ±10% V        |
 | Current | 10 mA (typical) |
 
-| Output ratings                       |
+|         | Output ratings             |
 |---------|----------------------------|
 | Current | 2 A (maximum, not limited) |
 
 
-### ADC resolution ###
+##### ADC resolution #####
 
 10-bit ADC enables 1024 distinct measurement steps. Since 4.096 V is used as
 voltage reference this brings us to resolution of 4.1 mA/mV.
@@ -45,13 +42,13 @@ Since device averages multiple measurements you can also expect values
 in-between.
 
 
-### Display resolution ###
+##### Display resolution #####
 
 Display will show resolution of 1 mA up to 100 mA. All other measurements are
 shown with resolution of 10 mA/mV/mW (e.g. 5.10 V).
 
 
-### Accuracy ###
+##### Accuracy #####
 
 | Range          | Resolution | Accuracy |
 |:--------------:|:----------:|:--------:|

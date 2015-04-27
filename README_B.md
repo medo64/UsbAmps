@@ -1,16 +1,14 @@
-UsbAmps (revision B)
-====================
+### UsbAmps (revision B) ###
 
 UsbAmps is a small USB pass-through device that measures current, voltage and
 power used by whatever is connected on its output.
 
 By default it shows current value but you can also recall minimum and maximum.
 
-![UsbAmps, revision B board](https://www.jmedved.com/content/usbamps_revb.jpg)
+![UsbAmps, revision B board](Wiki/B/Picture.jpg)
 
 
-Usage
------
+#### Usage ####
 
 Two bears are actually touch-sensitive buttons. Outside button determines what
 are you measuring (current, voltage, or power) and inner button determines
@@ -21,26 +19,24 @@ whether you will see current value or minimum/maximum.
 * Button 1&2: Resets minimum/maximum.
 
 
-Schematics
-----------
+#### Schematics ####
 
-![UsbAmps, revision B schematics](https://www.jmedved.com/content/usbamps_revb_schema.png)
+![UsbAmps, revision B schematics](Wiki/B/Schema.png)
 
 
-Specifications
---------------
+#### Specifications ####
 
-| Input ratings                      |
+|         | Input ratings            |
 |---------|--------------------------|
 | Voltage | 5 ±10% V                 |
 | Current | 10 mA (typical)          |
 
-| Output ratings                     |
+|         | Output ratings           |
 |---------|--------------------------|
 | Current | 2 A (maximum)            |
 
 
-### ADC resolution ###
+##### ADC resolution #####
 
 10-bit ADC enables 1024 distinct measurement steps. Since 2.048 V is used as
 voltage reference this brings us to resolution of 2 mA for current measurement.
@@ -50,13 +46,13 @@ Since device averages multiple measurements you can also expect values
 in-between.
 
 
-### Display resolution ###
+##### Display resolution #####
 
 Display will show resolution of 1 mA up to 100 mA. All other measurements are
 shown with resolution of 10 mA/mV/mW (e.g. 5.10 V).
 
 
-### Accuracy ###
+##### Accuracy #####
 
 Accuracy is given as ±(percent of reading + [counts](http://www.youtube.com/watch?v=U4JFeU-o2kc)
 of least significant digit).
@@ -65,7 +61,7 @@ Due to averaging, it will usually do better than this, but don't count on it as
 a precision device.
 
 
-#### DC current ####
+###### DC current ######
 
 | Range          | Resolution | Accuracy |
 |:--------------:|:----------:|:--------:|
@@ -73,17 +69,16 @@ a precision device.
 | 0.10 - 2.00 A  | 0.01 A     | 1% + 4   |
 
 
-#### DC voltage ####
+###### DC voltage ######
 
 | Range          | Resolution | Accuracy |
 |:--------------:|:----------:|:--------:|
 | 5.00 ±10% V    | 0.01 V     | 1% + 2   |
 
 
-FAQ
----
+#### FAQ ####
 
-### Why is Rout for current measurement 1kO? ###
+##### Why is Rout for current measurement 1kO? #####
 
 Since sense resistor is 100mO, having 1kO gives us nice 1V/1A. Maximum current
 that we actually have to measure is 1.5A (USB battery specification). Having
@@ -92,7 +87,7 @@ that we actually have to measure is 1.5A (USB battery specification). Having
 imprecise but when was last time you saw USB device that pulls only 10 mA?
 
 
-### Why is 554 mA shown as 0.55 A? ###
+##### Why is 554 mA shown as 0.55 A? #####
 
 Since device is intended for measuring up to 1.5 A (USB battery specification)
 and decimal point is rather small, there is a chance that you can mistake
@@ -104,7 +99,7 @@ Notice that this means your accuracy is 1% + 6 in that range (same as for
 0 - 99 mA range).
 
 
-### Device shows some mA value even when not plugged in. ###
+##### Device shows some mA value even when not plugged in. #####
 
 You can calibrate device to show 0 when there is no current passing through.
 
@@ -114,16 +109,6 @@ first. Device will then display CAL on screen and do 0-point calibration.
 Nothing else should be connected to UsbAmps at this time.
 
 
-### What is the license? ###
-
-This whole project is under [MIT license](http://www.jmedved.com/license/). In
-short, you can do whatever you want with this. You can build it, you can change
-it, and you can even sell it. Only thing you cannot do is to claim it as yours.
-
-Of course, if you like the project, you can always [donate](http://www.jmedved.com/donate/).
-
-
-Other projects
---------------
+#### Other projects ####
 
 You can check my other projects at [www.jmedved.com](http://www.jmedved.com/electronics/).

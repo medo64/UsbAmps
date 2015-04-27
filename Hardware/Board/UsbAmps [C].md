@@ -1,11 +1,9 @@
-UsbAmps
-=======
+### UsbAmps ###
 
 54.0 x 23.0 mm ~ 1.9 sqin
 
 
-Parts
------
+#### Parts ####
 
 |  # | Part name                        | RefDes  | DigiKey                    | DigiKey (alternative)      |
 |---:|----------------------------------|---------|----------------------------|----------------------------|
@@ -23,7 +21,7 @@ Parts
 |  1 | U ZXCT1009 (SOT23)               | U2      | ZXCT1009FCT-ND             |                            |
 
 
-### LCD ###
+##### LCD #####
 
 Transflective display is used in UsbAmps in order to allow for backlight. If
 backlight is not required, it is possible to use higher clarity reflective LCD.
@@ -33,8 +31,7 @@ backlight is not required, it is possible to use higher clarity reflective LCD.
 | DS LCD 3 digits (LCD-S301C31TR)  | DS1     | 67-1788-ND                 |
 
 
-Boards
-------
+#### Boards ####
 
 There are two board versions: Left and Right. Left version is intended for USB
 located on the left side of laptop. Likewise Right version is intended for USB
