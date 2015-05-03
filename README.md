@@ -37,28 +37,6 @@ work for all devices (or computers) but I had a quite good experience with
 support for it.
 
 
-#### Schematics ####
-
-![UsbAmps, revision C schematics](Wiki/C/Schema.png)
-
-
-#### Manufacturing ####
-
-If you want to make this board your self, just [grab the latest gerbers](http://www.jmedved.com/releases/usbamps/)
-(notice that there is left-hand and right-hand version) and send it over to
-[OSH Park](http://oshpark.com/) (or any other PCB manufacturer of your choice).
-
-Inside the archive you will also find parts list and latest firmware.
-
-
-##### Programming Firmware #####
-
-To get firmware on, you will need [PICkit 3](http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDocName=en538340&redirects=pickit3).
-In addition I prefer using [pogo pins](http://www.jmedved.com/2012/04/pogo-pickit/)
-instead of header soldering. That way you can just press PICkit 3 to the board,
-wait a few seconds and work is done.
-
-
 #### Specifications ####
 
 |         | Input ratings            |
@@ -159,6 +137,29 @@ plastic works the best. Beware to export design in EPS format because some
 laser cut services will have issue with SVG.
 
 
-#### Other projects ####
+#### Schematics ####
 
-You can check my other projects at [www.jmedved.com](http://www.jmedved.com/electronics/).
+![UsbAmps, revision C schematics](Wiki/C/Schema.png)
+
+
+#### Manufacturing ####
+
+If you want to make this board your self, just grab the latest release (notice
+that there is a left-hand and a right-hand version) and send gerbers over to
+[OSH Park](http://oshpark.com/) (or any other PCB manufacturer of your choice).
+
+Inside the archive you will also find parts list and latest firmware.
+
+
+##### Programming Firmware #####
+
+To get firmware on, you will need [PICkit 3](http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&nodeId=1406&dDocName=en538340&redirects=pickit3).
+In addition I prefer using [pogo pins](http://www.jmedved.com/2012/04/pogo-pickit/)
+instead of header soldering. That way you can just press PICkit 3 to the board,
+wait a few seconds and work is done.
+
+
+
+---
+
+*You can check my blog and other projects at [www.jmedved.com](http://www.jmedved.com/).*
