@@ -93,7 +93,7 @@ void main() {
             measure_reinit();
         }
         lcd_writeLoading();
-    } else if (touch_outer_pressed()) { //outer key signifies Charging Downstream Port
+    } else if (OPTION_DSHORT_CDP_ENABLED && touch_outer_pressed()) { //outer key signifies Charging Downstream Port
         lcd_writeHighPower();
         io_dshort_on();
         for (uint8_t i=0; i<OPTION_DSHORT_CDP_COUNT; i++) {

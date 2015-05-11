@@ -32,6 +32,12 @@
 #define OPTION_SHOW_CAPACITY  false
 /* Defines whether capacity is shown as fourth measurement option. */
 
+#define OPTION_DSHORT_CDP_ENABLED  false
+/* defines if one can attempt to enter Charging Downstream Port Hi-power mode
+ * by holding outer button during startup. Disabled by default because it works
+ * only occasionally (highly timing dependant) and it can get easily triggered
+ * by accident. */
+
 #define OPTION_DSHORT_CDP_COUNT  12
 /* Defines the duration of the data lines short circuit in tens of milliseconds
  * during the Charging Downstream Port Hi-power mode turn up. Proper value will

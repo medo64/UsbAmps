@@ -30,12 +30,6 @@ This will allow it to pull up to 1.5 A but at a cost of data connectivity. Most
 newer notebooks I have tried this on gave above 1 A charging current without
 problem.
 
-If you hold outside button during power-on of UsbAmps you will also see HIP but
-it will disappear quickly. This will trick a (supported) device into using
-Charging Downstream Port. This will allow 1.5 A along with data. It might not
-work for all devices (or computers) but I had a quite good experience with
-support for it.
-
 
 #### Specifications ####
 
@@ -122,7 +116,25 @@ display. This will perform the 0-point calibration. Nothing else should be
 connected to UsbAmps at this time.
 
 
-#### Backlight ####
+##### Where has Charging Downstream Port dissapeared? #####
+
+If you hold outside button during power-on of UsbAmps some older firmware
+versions would show HIP  that would disappear quickly. This used to trick a
+(supported) device into using Charging Downstream Port. Advantage is that you
+would get 1.5 A charging along with data. It might not work for all devices (or
+computers) but I had a quite good experience with support for it.
+
+However, it also proved to be finicky to actually work with it. Not only that
+it required you to have device already plugged in but it was extremelly easy to
+trigger by accident. It is almost impossible to plug the device in without
+touching the outer key and thus this functionality was usually triggered by
+accident and not all devices would handle it gracefully.
+
+If you prefer old behavior you can change it in `option.h` by setting
+`OPTION_DSHORT_CDP_ENABLED` to `true`.
+
+
+##### What about backlight? #####
 
 If you fit optional resistors and two right-angle LEDs, you will get a crude
 backlight. To turn it on just long-press inner button. However do notice that
@@ -158,8 +170,6 @@ In addition I prefer using [pogo pins](http://www.jmedved.com/2012/04/pogo-picki
 instead of header soldering. That way you can just press PICkit 3 to the board,
 wait a few seconds and work is done.
 
-
-
 ---
 
-*You can check my blog and other projects at [www.jmedved.com](http://www.jmedved.com/).*
+*Josip Medved, [www.jmedved.com](http://www.jmedved.com/)*
